@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_menu_nav_items",
+  "info": {
+    "displayName": "navItems"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "hasMegamenu": {
+      "type": "boolean",
+      "default": false
+    },
+    "megaMenu": {
+      "type": "component",
+      "component": "menu.nav-megamenu",
+      "repeatable": false
+    }
+  },
+  "config": {}
+}

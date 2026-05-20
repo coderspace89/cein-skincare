@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_blocks_nav_columns",
+  "info": {
+    "displayName": "Nav Column"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "links": {
+      "type": "component",
+      "component": "elements.nav-link",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

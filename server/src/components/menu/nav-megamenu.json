@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_menu_nav_megamenus",
+  "info": {
+    "displayName": "Nav Megamenu"
+  },
+  "options": {},
+  "attributes": {
+    "columns": {
+      "type": "component",
+      "component": "blocks.nav-column",
+      "repeatable": true
+    },
+    "promo": {
+      "type": "component",
+      "component": "elements.nav-promo",
+      "repeatable": false
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "categories",
+        "stores"
+      ]
+    }
+  },
+  "config": {}
+}

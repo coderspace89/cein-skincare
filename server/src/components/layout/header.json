@@ -4,6 +4,22 @@
     "displayName": "Header"
   },
   "options": {},
-  "attributes": {},
+  "attributes": {
+    "announcementBar": {
+      "type": "string"
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "navItems": {
+      "type": "component",
+      "component": "menu.nav-items",
+      "repeatable": true
+    }
+  },
   "config": {}
 }

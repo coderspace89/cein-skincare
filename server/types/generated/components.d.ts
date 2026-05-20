@@ -1,17 +1,84 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface BlocksNavColumn extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_nav_columns';
+  info: {
+    displayName: 'Nav Column';
+  };
+  attributes: {
+    links: Schema.Attribute.Component<'elements.nav-link', true>;
+    title: Schema.Attribute.String;
+  };
+}
+
+export interface ElementsNavLink extends Struct.ComponentSchema {
+  collectionName: 'components_elements_nav_links';
+  info: {
+    displayName: 'Nav Link';
+  };
+  attributes: {
+    label: Schema.Attribute.String;
+    url: Schema.Attribute.String;
+  };
+}
+
+export interface ElementsNavPromo extends Struct.ComponentSchema {
+  collectionName: 'components_elements_nav_promos';
+  info: {
+    displayName: 'Nav Promo';
+  };
+  attributes: {
+    image: Schema.Attribute.Media<'images'>;
+    linkUrl: Schema.Attribute.String;
+  };
+}
+
 export interface LayoutHeader extends Struct.ComponentSchema {
   collectionName: 'components_layout_headers';
   info: {
     displayName: 'Header';
   };
-  attributes: {};
+  attributes: {
+    announcementBar: Schema.Attribute.String;
+    logo: Schema.Attribute.Media<'images'>;
+    navItems: Schema.Attribute.Component<'menu.nav-items', true>;
+  };
+}
+
+export interface MenuNavItems extends Struct.ComponentSchema {
+  collectionName: 'components_menu_nav_items';
+  info: {
+    displayName: 'navItems';
+  };
+  attributes: {
+    hasMegamenu: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    megaMenu: Schema.Attribute.Component<'menu.nav-megamenu', false>;
+    title: Schema.Attribute.String;
+    url: Schema.Attribute.String;
+  };
+}
+
+export interface MenuNavMegamenu extends Struct.ComponentSchema {
+  collectionName: 'components_menu_nav_megamenus';
+  info: {
+    displayName: 'Nav Megamenu';
+  };
+  attributes: {
+    columns: Schema.Attribute.Component<'blocks.nav-column', true>;
+    promo: Schema.Attribute.Component<'elements.nav-promo', false>;
+    type: Schema.Attribute.Enumeration<['categories', 'stores']>;
+  };
 }
 
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
+      'blocks.nav-column': BlocksNavColumn;
+      'elements.nav-link': ElementsNavLink;
+      'elements.nav-promo': ElementsNavPromo;
       'layout.header': LayoutHeader;
+      'menu.nav-items': MenuNavItems;
+      'menu.nav-megamenu': MenuNavMegamenu;
     }
   }
 }
