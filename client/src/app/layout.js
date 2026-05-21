@@ -2,6 +2,7 @@ import { Arimo } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Header from "@/app/components/layout/Header";
 
 const arimo = Arimo({
   variable: "--font-arimo",
@@ -27,7 +28,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${arimo.variable} ${myFont.variable}`}>
-      <body>{children}</body>
+      <body>
+        <Header />
+        {children}
+      </body>
     </html>
   );
 }
