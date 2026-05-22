@@ -2,6 +2,8 @@
   --background: #ffffff;
   --foreground: #333333;
   --navbg: #fbfefb;
+  --linkText: #676660;
+  --storeInfoBlock: #f2f3ec;
 }
 
 @media (prefers-color-scheme: dark) {

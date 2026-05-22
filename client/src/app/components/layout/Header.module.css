@@ -146,36 +146,6 @@
   transform: scale(1.04);
 }
 
-/* Stores Falling State Elements Layout */
-.storesContent {
-  max-width: 500px;
-  padding-left: 10px;
-}
-
-.storesDescription {
-  font-size: 15px;
-  color: #666666;
-  line-height: 1.6;
-  margin-bottom: 20px;
-}
-
-.exploreStoresBtn {
-  display: inline-block;
-  padding: 10px 24px;
-  background-color: #111111;
-  color: #ffffff;
-  text-transform: uppercase;
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  text-decoration: none;
-  transition: background-color 0.2s ease;
-}
-
-.exploreStoresBtn:hover {
-  background-color: #a38a75;
-  color: #ffffff;
-}
-
 .formSelect,
 .formSelect:focus {
   font-size: 14px !important;
@@ -202,4 +172,83 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.dropdownMapWrap {
+  width: 100%;
+  height: 350px; /* ⚠️ MANDATORY: Leaflet requires an explicit numeric pixel height or rem value */
+  position: relative;
+  overflow: hidden;
+}
+
+.storeLocatorGrid {
+  display: grid;
+  /* Adjust the fractional widths (fr) as needed to make the map or lists wider */
+  grid-template-columns: 1fr 2fr;
+  gap: 40px;
+  align-items: start;
+  width: 100%;
+}
+
+.formCheck {
+  margin-bottom: clamp(15px, 3vw, 20px);
+}
+
+.formCheck input[type="radio"]:checked {
+  box-shadow: none;
+  background-color: var(--foreground);
+  border: 1px solid var(--foreground);
+}
+
+.formCheck input[type="radio"] {
+  border: 1px solid var(--foreground);
+  width: 18px;
+  height: 18px;
+}
+
+.districtListLink {
+  text-decoration: none;
+  color: var(--linkText);
+  font-size: clamp(16px, 3vw, 20px);
+  margin-bottom: 10px;
+  display: block;
+}
+
+.districtInput {
+  border: 0;
+  border-bottom: 1px solid var(--foreground);
+  color: var(--linkText);
+  font-size: clamp(16px, 3vw, 20px);
+  border-radius: 0;
+  background-color: transparent;
+}
+
+.districtInput:focus {
+  box-shadow: none;
+  border-bottom: 1px solid var(--foreground);
+  background-color: transparent;
+  color: var(--linkText);
+}
+
+.districtTitle {
+  color: var(--linkText);
+  font-size: 15px;
+}
+
+.storeInfoBlock {
+  background-color: var(--storeInfoBlock);
+  padding: 25px;
+}
+
+.storeBtn {
+  background-color: var(--foreground);
+  display: block;
+  width: 100%;
+  padding: 20px;
+  color: var(--background);
+  font-size: 14px;
+  font-weight: 400;
+  text-decoration: none;
+  text-align: center;
+  margin-top: 20px;
 }

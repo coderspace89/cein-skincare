@@ -12,6 +12,15 @@ import Form from "react-bootstrap/Form";
 import Link from "next/link";
 import { CiSearch, CiHeart, CiUser } from "react-icons/ci";
 import { PiBagLight } from "react-icons/pi";
+import dynamic from "next/dynamic";
+
+// 2. Dynamically load the component, disabling server-side rendering execution
+const MapComponent = dynamic(() => import("./MapComponent"), {
+  ssr: false,
+  loading: () => (
+    <div className={headerStyles.mapPlaceholder}>Loading Map Area...</div>
+  ),
+});
 
 const Header = () => {
   const [headerData, setHeaderData] = useState(null);
@@ -19,6 +28,7 @@ const Header = () => {
   const [activeMegaMenu, setActiveMegaMenu] = useState(null);
   const [storesData, setStoresData] = useState([]);
   const [selectedDistrict, setSelectedDistrict] = useState("New York");
+  const [selectedDistrictData, setSelectedDistrictData] = useState([]);
 
   const query = qs.stringify(
     {
@@ -63,21 +73,6 @@ const Header = () => {
     fetchHeader();
   }, [locale, query]);
 
-  //   fetch stores data
-
-  const storesQuery = qs.stringify(
-    {
-      filters: {
-        district: {
-          $eq: selectedDistrict, // Uses the exact match operator
-        },
-      },
-    },
-    {
-      encodeValuesOnly: true,
-    },
-  );
-
   //   fetch only district name from strapi
 
   const districtNameQuery = qs.stringify(
@@ -89,15 +84,31 @@ const Header = () => {
     },
   );
 
+  //  selected store data
+
   useEffect(() => {
-    const fetchStores = async () => {
+    const fetchSelectedDistrictStores = async () => {
+      // Stringify here so it uses the absolute freshest state value
+      const storesQuery = qs.stringify(
+        {
+          filters: {
+            district: {
+              $eq: selectedDistrict,
+            },
+          },
+        },
+        { encodeValuesOnly: true },
+      );
+
       const response = await fetch(`/api/stores?${storesQuery}`);
       const data = await response.json();
-      console.log(data?.data);
-      //   setStoresData(data?.data);
+      setSelectedDistrictData(data?.data || []);
     };
-    fetchStores();
+
+    fetchSelectedDistrictStores();
   }, [selectedDistrict]);
+
+  // all stores data
 
   useEffect(() => {
     const fetchStores = async () => {
@@ -113,9 +124,15 @@ const Header = () => {
   const uniqueDistricts = [
     ...new Set(storesData.map((store) => store.district)),
   ];
-  // Result: ["Brooklyn", "Buffalo", "Webster", ...]
 
-  console.log(uniqueDistricts);
+  // 1. Add the state tracking the single active store object near your other states
+  const [activeStore, setActiveStore] = useState(null);
+
+  // Reset the active store whenever the district changes
+  // so the map doesn't stay stuck on a store from a different state/city.
+  useEffect(() => {
+    setActiveStore(null);
+  }, [selectedDistrict]);
 
   return (
     <section className={headerStyles.headerSection}>
@@ -196,27 +213,162 @@ const Header = () => {
                                   </div>
                                 ) : (
                                   /* Dynamic layout structural fallback if the megamenu type is "stores" */
-                                  <div className={headerStyles.storesContent}>
-                                    <h4 className={headerStyles.columnTitle}>
-                                      Our Boutiques
-                                    </h4>
-                                    <p
-                                      className={headerStyles.storesDescription}
+                                  <div>
+                                    {/* NEW WRAPPER: This groups your 3 store sub-columns into one grid item */}
+                                    <div
+                                      className={headerStyles.storeLocatorGrid}
                                     >
-                                      Discover our clean skincare sanctuaries.
-                                      Explore experiences, book customized
-                                      treatments, and locate a storefront near
-                                      you.
-                                    </p>
-                                    <Link
-                                      href="/stores"
-                                      className={headerStyles.exploreStoresBtn}
-                                    >
-                                      Find a Store Location
-                                    </Link>
+                                      {/* Column 1: District Filter Search */}
+                                      <div
+                                        className={
+                                          headerStyles.menuColumnsContainer
+                                        }
+                                      >
+                                        <Form>
+                                          <Form.Group
+                                            className="mb-4"
+                                            controlId="districts-search"
+                                          >
+                                            <Form.Control
+                                              type="text"
+                                              placeholder="Search Districts"
+                                              className={
+                                                headerStyles.districtInput
+                                              }
+                                              onChange={(e) =>
+                                                setSelectedDistrict(
+                                                  e.target.value,
+                                                )
+                                              }
+                                              value={selectedDistrict}
+                                            />
+                                          </Form.Group>
+                                        </Form>
+                                        <div>
+                                          <p
+                                            className={
+                                              headerStyles.districtTitle
+                                            }
+                                          >
+                                            District
+                                          </p>
+                                        </div>
+                                        <ul className="list-unstyled">
+                                          {uniqueDistricts?.map(
+                                            (districtListItem) => (
+                                              <li key={districtListItem}>
+                                                <Link
+                                                  href={`/stores/${districtListItem.toLowerCase().split(" ").join("-")}`}
+                                                  onClick={(e) => {
+                                                    e.preventDefault();
+                                                    setSelectedDistrict(
+                                                      districtListItem,
+                                                    );
+                                                  }}
+                                                  className={
+                                                    headerStyles.districtListLink
+                                                  }
+                                                >
+                                                  {districtListItem}
+                                                </Link>
+                                              </li>
+                                            ),
+                                          )}
+                                        </ul>
+                                      </div>
+
+                                      {/* Column 2: Individual Branch Address Radio Selector */}
+                                      <div
+                                        className={
+                                          headerStyles.menuColumnsContainer
+                                        }
+                                      >
+                                        {selectedDistrictData.map(
+                                          (districtListItem) => (
+                                            <Form.Check
+                                              type="radio"
+                                              className={headerStyles.formCheck}
+                                              id={districtListItem.id}
+                                              key={districtListItem.id}
+                                              name="storesNamesList"
+                                              checked={
+                                                activeStore?.id ===
+                                                districtListItem.id
+                                              }
+                                              onChange={() =>
+                                                setActiveStore(districtListItem)
+                                              }
+                                              label={
+                                                <div>
+                                                  <span className="d-block fw-semibold">
+                                                    {districtListItem?.name}
+                                                  </span>
+                                                  <span className="d-block small text-muted">
+                                                    {districtListItem?.address}
+                                                  </span>
+                                                </div>
+                                              }
+                                            />
+                                          ),
+                                        )}
+                                      </div>
+                                    </div>
+                                    {/* END OF NEW WRAPPER */}
                                   </div>
                                 )}
                               </div>
+
+                              {navItem.megaMenu.type === "stores" && (
+                                <div>
+                                  <div className={headerStyles.dropdownMapWrap}>
+                                    <MapComponent
+                                      activeStore={activeStore}
+                                      stores={selectedDistrictData}
+                                    />
+                                  </div>
+                                  <div className={headerStyles.storeInfoBlock}>
+                                    {selectedDistrictData.map(
+                                      (districtListItem) => (
+                                        <div key={districtListItem?.id}>
+                                          <span className="d-block">
+                                            {activeStore?.id ===
+                                            districtListItem.id
+                                              ? districtListItem?.name
+                                              : ""}
+                                          </span>
+                                          <span className="d-block">
+                                            {activeStore?.id ===
+                                            districtListItem.id
+                                              ? districtListItem?.address
+                                              : ""}
+                                          </span>
+                                          <span className="d-block">
+                                            {activeStore?.id ===
+                                            districtListItem.id
+                                              ? districtListItem?.phone
+                                              : ""}
+                                          </span>
+                                          <span className="d-block">
+                                            {activeStore?.id ===
+                                            districtListItem.id
+                                              ? districtListItem?.email
+                                              : ""}
+                                          </span>
+                                          {activeStore?.id ===
+                                            districtListItem.id && (
+                                            <Link
+                                              className={headerStyles.storeBtn}
+                                              href={`/stores/${districtListItem?.district?.toLowerCase().split(" ").join("-")}/${districtListItem?.name?.toLowerCase().split(" ").join("-").replace(".", "")}`}
+                                            >
+                                              Take me there
+                                            </Link>
+                                          )}
+                                        </div>
+                                      ),
+                                    )}
+                                  </div>
+                                </div>
+                              )}
 
                               {/* Right Content Column: Promotion Segment (If Present) */}
                               {navItem.megaMenu.promo && (
