@@ -4,6 +4,7 @@
   --navbg: #fbfefb;
   --linkText: #676660;
   --storeInfoBlock: #f2f3ec;
+  --mobileMenuLinkBorder: #cdcbc0;
 }
 
 @media (prefers-color-scheme: dark) {

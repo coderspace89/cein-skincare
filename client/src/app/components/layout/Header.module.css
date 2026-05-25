@@ -14,10 +14,6 @@
   color: var(--background);
 }
 
-.navbar {
-  background-color: var(--navbg);
-}
-
 .navLinkWrap {
   display: flex;
   align-items: center;
@@ -30,7 +26,6 @@
 .navLinks {
   font-size: 14px;
   letter-spacing: 0.1em;
-  padding: 10px 15px;
   color: var(--foreground);
   transition: color 0.2s ease;
   margin-right: clamp(10px, 3vw, 15px);
@@ -48,11 +43,23 @@
   left: 0;
   width: 100%;
   background-color: var(--navbg);
-  border-top: 1px solid var(--foreground);
+  /* border-top: 1px solid var(--foreground); */
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
   padding: 40px 10px;
   z-index: 9999;
   animation: fadeInMenu 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-top: 14px;
+}
+
+/* THE HOVER BRIDGE */
+.megaMenuDropdown::before {
+  content: "";
+  position: absolute;
+  top: -14px; /* Extends exactly 14px upwards to touch the header link */
+  left: 0;
+  width: 100%;
+  height: 14px; /* Matches your margin-top height */
+  background: transparent; /* Totally invisible to the user */
 }
 
 /* Outer Layout: Base Grid splitting category columns tracks and promotional blocks */
@@ -251,4 +258,349 @@
   text-decoration: none;
   text-align: center;
   margin-top: 20px;
+}
+
+.storeInfoBlockText {
+  font-size: 14px;
+  color: var(--foreground);
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* =========================================================================
+   Mobile Navigation Fullscreen Drawer Shell Stylesheet Layout Map
+   ========================================================================= */
+
+.mobileTriggerBtn {
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0.5rem 0.25rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-right: clamp(10px, 3vw, 15px);
+}
+
+.mobileMenuIsOpen {
+  transform: translateX(0);
+}
+
+.mobileMenuHeader {
+  /* border-bottom: 1px solid var(--mobileMenuLinkBorder); */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1.5rem;
+}
+
+.mobileBackBtn {
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #333333;
+  padding: 0;
+}
+
+.mobileCloseBtn {
+  background: transparent;
+  border: none;
+  color: #333333;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobileMenuBody {
+  flex-grow: 1;
+  position: relative;
+  overflow: hidden; /* Contains sliding dynamic layers panels inside viewport framework bounds safely */
+}
+
+/* Base Panel Slide Animation Infrastructure Setup Matrix */
+.mobilePanelLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--navbg);
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(30px);
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease,
+    visibility 0.3s ease;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.panelLayerActive {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+}
+
+/* Screen Panel Layer 1 List Typography Specs Layout Links */
+.mobileRootNavList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mobileRootNavItem {
+  border-bottom: 1px solid var(--mobileMenuLinkBorder);
+}
+
+.mobileNavLinkRow,
+.mobileNavLinkRowBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  font-size: 1.05rem;
+  color: #111111;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  text-align: left;
+  font-weight: 400;
+}
+
+/* Secondary Sticky Base Footer Navigation Controls Strip UI Module */
+.mobileMenuFooterStrip {
+  margin-top: auto;
+  padding: 2.5rem 1.5rem 2rem 1.5rem;
+  background-color: #fafafa;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  border-top: 1px solid #f1f1f1;
+}
+
+.mobileMenuFooterStrip a {
+  color: #666666;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.mobileLangSelectorWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.mobileLangSelectorWrap span {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #999999;
+  letter-spacing: 0.05em;
+}
+
+.mobileLangSelectorWrap select {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 0.9rem;
+  color: #333333;
+  padding: 0;
+  font-weight: 500;
+}
+
+/* Screen Nested Categories View Panel Link Maps */
+.mobileSubPanelLinkRow {
+  display: block;
+  padding: 1.15rem 1.5rem;
+  font-size: 0.95rem;
+  color: #444444;
+  text-decoration: none;
+  border-bottom: 1px solid var(--mobileMenuLinkBorder);
+}
+
+/* Screen Nested Store Locator Interactive Map View Layout Matrix */
+.mobileStoresOverlayLayoutGrid {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.mobileStoresListContainer {
+  max-height: 220px;
+  overflow-y: auto;
+  border-bottom: 1px solid #eeeeee;
+  background-color: #ffffff;
+}
+
+.mobileStoreRadioCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.15rem 1.5rem;
+  border-bottom: 1px solid #f7f7f7;
+  cursor: pointer;
+}
+
+.mobileStoreCardSelected {
+  background-color: #fafafa;
+}
+
+.mobileCustomRadioCircle {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  border: 1.5px solid #cccccc;
+  border-radius: 50%;
+  margin-top: 0.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobileStoreCardSelected .mobileCustomRadioCircle {
+  border-color: #111111;
+}
+
+.mobileCustomRadioInnerDot {
+  width: 10px;
+  height: 10px;
+  background-color: #111111;
+  border-radius: 50%;
+}
+
+.mobileStoreCardContentTextWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.mobileStoreTitleText {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #111111;
+}
+
+.mobileStoreAddressText {
+  font-size: 0.85rem;
+  color: #666666;
+  line-height: 1.4;
+}
+
+/* Map Window Canvas Placement Frame Elements inside Mobile Canvas view */
+.mobileMapCanvasWrapperBox {
+  flex-grow: 1;
+  min-height: 250px;
+  position: relative;
+  background-color: #e5e5e5;
+}
+
+/* Selection Info Detail Highlight Summary Blocks Specs styles */
+.mobileActiveStoreFooterCardDetails {
+  padding: 1.5rem;
+  background-color: #fafafa;
+  border-top: 1px solid #eeeeee;
+}
+
+.mobileFooterStoreTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111111;
+  margin-bottom: 0.5rem;
+}
+
+.mobileFooterStoreDescText {
+  font-size: 0.85rem;
+  color: #555555;
+  margin-bottom: 0.35rem;
+}
+
+.mobileActionTakeMeTherePrimaryBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background-color: var(--foreground);
+  color: var(--background);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 0.9rem 1rem;
+  margin-top: 1.25rem;
+  letter-spacing: 0.05em;
+  transition: background-color 0.2s ease;
+}
+
+.mobileActionTakeMeTherePrimaryBtn:hover {
+  background-color: var(--foreground);
+  color: var(--background);
+}
+
+/* updated fix */
+
+/* Ensure alignment tracking containers baseline symmetrically */
+.navbar {
+  height: 64px;
+  padding: 0 !important;
+  background-color: var(--navbg);
+  display: flex;
+  align-items: center;
+  position: fixed;
+  width: 100%;
+  border-bottom: 1px solid var(--foreground);
+}
+
+/* Fix right-side mobile icon alignments to stay flush and vertically centered */
+.utilityIconsNavRow {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-end;
+  gap: 12px; /* Uniform horizontal item distribution */
+}
+
+.navIconLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  text-decoration: none;
+}
+
+/* --- Shift Mobile Drawer Drawer Below The Active Navbar Anchor --- */
+.mobileMenuOverlay {
+  position: absolute;
+  top: 120px; /* Matches navbar height perfectly to reveal the header strip */
+  left: 0;
+  width: 100%;
+  /* Takes standard remaining visual screen space calculation rules */
+  height: calc(100vh - 64px);
+  background-color: var(--navbg);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.25s ease,
+    visibility 0.25s ease;
+}
+
+.mobileMenuIsOpen {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobileMenuBody {
+  flex: 1;
+  position: relative;
+  overflow-y: auto; /* Contains inner layout scrolling limits inside the drawer viewport bounds */
 }
