@@ -1,5 +1,20 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface BlocksHeroSection extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_hero_sections';
+  info: {
+    displayName: 'Hero Section';
+  };
+  attributes: {
+    backgroundImage: Schema.Attribute.Media<'images', true>;
+    ctaLabel: Schema.Attribute.String;
+    ctaUrl: Schema.Attribute.String;
+    description: Schema.Attribute.Text;
+    subtitle: Schema.Attribute.String;
+    title: Schema.Attribute.String;
+  };
+}
+
 export interface BlocksNavColumn extends Struct.ComponentSchema {
   collectionName: 'components_blocks_nav_columns';
   info: {
@@ -73,6 +88,7 @@ export interface MenuNavMegamenu extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
+      'blocks.hero-section': BlocksHeroSection;
       'blocks.nav-column': BlocksNavColumn;
       'elements.nav-link': ElementsNavLink;
       'elements.nav-promo': ElementsNavPromo;

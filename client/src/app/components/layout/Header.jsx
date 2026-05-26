@@ -18,6 +18,7 @@ import {
   IoChevronBackOutline,
 } from "react-icons/io5"; // Premium minimal navigation line icons
 import dynamic from "next/dynamic";
+import { useLocale } from "@/context/LocaleContext";
 
 const MapComponent = dynamic(() => import("./MapComponent"), {
   ssr: false,
@@ -28,7 +29,7 @@ const MapComponent = dynamic(() => import("./MapComponent"), {
 
 const Header = () => {
   const [headerData, setHeaderData] = useState(null);
-  const [locale, setLocale] = useState("en");
+  const { locale, setLocale } = useLocale();
   const [activeMegaMenu, setActiveMegaMenu] = useState(null);
   const [storesData, setStoresData] = useState([]);
   const [selectedDistrict, setSelectedDistrict] = useState("New York");
