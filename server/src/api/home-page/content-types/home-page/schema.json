@@ -24,6 +24,17 @@
       },
       "component": "blocks.hero-section",
       "repeatable": false
+    },
+    "pageBlocks": {
+      "type": "dynamiczone",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "components": [
+        "blocks.image-with-text"
+      ]
     }
   }
 }

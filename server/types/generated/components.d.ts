@@ -15,6 +15,23 @@ export interface BlocksHeroSection extends Struct.ComponentSchema {
   };
 }
 
+export interface BlocksImageWithText extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_image_with_texts';
+  info: {
+    displayName: 'ImageWithText';
+  };
+  attributes: {
+    ctaLabel: Schema.Attribute.String;
+    ctaUrl: Schema.Attribute.String;
+    description: Schema.Attribute.Text;
+    image: Schema.Attribute.Media<'images'>;
+    imagePosition: Schema.Attribute.Enumeration<['left', 'right']> &
+      Schema.Attribute.DefaultTo<'left'>;
+    subtitle: Schema.Attribute.String;
+    title: Schema.Attribute.String;
+  };
+}
+
 export interface BlocksNavColumn extends Struct.ComponentSchema {
   collectionName: 'components_blocks_nav_columns';
   info: {
@@ -23,6 +40,24 @@ export interface BlocksNavColumn extends Struct.ComponentSchema {
   attributes: {
     links: Schema.Attribute.Component<'elements.nav-link', true>;
     title: Schema.Attribute.String;
+  };
+}
+
+export interface BlocksProductCarousel extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_product_carousels';
+  info: {
+    displayName: 'ProductCarousel';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    productHandles: Schema.Attribute.Component<
+      'elements.product-handles',
+      true
+    >;
+    subtitle: Schema.Attribute.String;
+    title: Schema.Attribute.String;
+    viewAllLabel: Schema.Attribute.String;
+    viewAllUrl: Schema.Attribute.String;
   };
 }
 
@@ -45,6 +80,16 @@ export interface ElementsNavPromo extends Struct.ComponentSchema {
   attributes: {
     image: Schema.Attribute.Media<'images'>;
     linkUrl: Schema.Attribute.String;
+  };
+}
+
+export interface ElementsProductHandles extends Struct.ComponentSchema {
+  collectionName: 'components_elements_product_handles';
+  info: {
+    displayName: 'productHandles';
+  };
+  attributes: {
+    handle: Schema.Attribute.String;
   };
 }
 
@@ -89,9 +134,12 @@ declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'blocks.hero-section': BlocksHeroSection;
+      'blocks.image-with-text': BlocksImageWithText;
       'blocks.nav-column': BlocksNavColumn;
+      'blocks.product-carousel': BlocksProductCarousel;
       'elements.nav-link': ElementsNavLink;
       'elements.nav-promo': ElementsNavPromo;
+      'elements.product-handles': ElementsProductHandles;
       'layout.header': LayoutHeader;
       'menu.nav-items': MenuNavItems;
       'menu.nav-megamenu': MenuNavMegamenu;

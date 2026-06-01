@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_elements_product_handles",
+  "info": {
+    "displayName": "productHandles"
+  },
+  "options": {},
+  "attributes": {
+    "handle": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}
