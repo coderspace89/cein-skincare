@@ -33,7 +33,8 @@
         }
       },
       "components": [
-        "blocks.image-with-text"
+        "blocks.image-with-text",
+        "blocks.product-carousel"
       ]
     }
   }
