@@ -61,6 +61,21 @@ export interface BlocksProductCarousel extends Struct.ComponentSchema {
   };
 }
 
+export interface BlocksTextOverImage extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_text_over_images';
+  info: {
+    displayName: 'TextOverImage';
+  };
+  attributes: {
+    backgroundImage: Schema.Attribute.Media<'images'>;
+    ctaLabel: Schema.Attribute.String;
+    ctaLink: Schema.Attribute.String;
+    description: Schema.Attribute.RichText;
+    subtitle: Schema.Attribute.String;
+    title: Schema.Attribute.String;
+  };
+}
+
 export interface ElementsNavLink extends Struct.ComponentSchema {
   collectionName: 'components_elements_nav_links';
   info: {
@@ -137,6 +152,7 @@ declare module '@strapi/strapi' {
       'blocks.image-with-text': BlocksImageWithText;
       'blocks.nav-column': BlocksNavColumn;
       'blocks.product-carousel': BlocksProductCarousel;
+      'blocks.text-over-image': BlocksTextOverImage;
       'elements.nav-link': ElementsNavLink;
       'elements.nav-promo': ElementsNavPromo;
       'elements.product-handles': ElementsProductHandles;

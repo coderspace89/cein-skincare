@@ -8,12 +8,12 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { LiaArrowRightSolid } from "react-icons/lia";
 import { useLocale } from "@/context/LocaleContext";
-import { getStrapiMedia } from "@/lib/utils";
+import { IoHeartOutline } from "react-icons/io5";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { getShopifyProductsByHandles } from "@/lib/shopifyHelper";
 import Image from "next/image";
+import Link from "next/link";
 
 const SliderOne = () => {
   const { locale } = useLocale();
@@ -69,30 +69,63 @@ const SliderOne = () => {
     fetchBlockData();
   }, [query]);
 
-  // FETCH PRODUCTS DATA FROM SHOPIFY
+  // FETCH PRODUCTS DATA VIA LOCAL NEXT.JS SERVER PROXY
   useEffect(() => {
-    // Only run if sliderData exists and actually matches your current language context
     if (!sliderData?.productHandles) return;
 
-    let isMounted = true; // Prevents updating state if component unmounts mid-fetch
+    let isMounted = true;
 
-    getShopifyProductsByHandles(sliderData.productHandles, locale).then(
-      (products) => {
-        if (isMounted) {
-          setShopifyProducts(products);
-        }
+    // 1. Fetch from your own internal Next.js server route
+    fetch("/api/products", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify({
+        productHandles: sliderData.productHandles,
+        locale: locale,
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Network proxy response failed");
+        return res.json();
+      })
+      .then((products) => {
+        if (isMounted) {
+          setShopifyProducts(products); // 2. Set state successfully!
+        }
+      })
+      .catch((err) => {
+        console.error("Client side fetch failed:", err);
+      });
 
     return () => {
-      isMounted = false; // Cleanup flag
+      isMounted = false;
     };
   }, [sliderData, locale]);
 
   console.log(shopifyProducts);
 
+  // Update your dictionary to use string keys with a space:
+  const tagTranslations = {
+    en: {
+      bestseller: "Bestseller",
+      "new formula": "New Formula", // 👈 Wrap in quotes with a space
+    },
+    es: {
+      bestseller: "Más Vendido",
+      "new formula": "Nueva Fórmula",
+    },
+    fr: {
+      bestseller: "Meilleure Vente",
+      "new formula": "Nouvelle Formule",
+    },
+  };
+
+  const currentLocale = locale.toLowerCase();
+
   const settings = {
-    dots: true,
+    dots: false,
     infinite: false,
     speed: 500,
     slidesToShow: 4,
@@ -105,7 +138,7 @@ const SliderOne = () => {
           slidesToShow: 3,
           slidesToScroll: 1,
           infinite: true,
-          dots: true,
+          dots: false,
         },
       },
       {
@@ -132,9 +165,11 @@ const SliderOne = () => {
         <Row>
           <Col lg={12}>
             <div>
-              <p>{sliderData?.subtitle}</p>
-              <h2>{sliderData?.title}</h2>
-              <p>{sliderData?.description}</p>
+              <p className={styles.sectionSubtitle}>{sliderData?.subtitle}</p>
+              <h2 className={styles.sectionTitle}>{sliderData?.title}</h2>
+              <p className={styles.sectionDescription}>
+                {sliderData?.description}
+              </p>
             </div>
           </Col>
           <Col lg={12}>
@@ -143,8 +178,8 @@ const SliderOne = () => {
               {shopifyProducts.length > 0 ? (
                 <Slider {...settings}>
                   {shopifyProducts.map((product) => (
-                    <div key={product?.id}>
-                      <div>
+                    <div key={product?.id} className={styles.sliderCard}>
+                      <div className={styles.sliderImageWrapper}>
                         {product?.imageUrl && (
                           <Image
                             src={product?.imageUrl}
@@ -154,13 +189,51 @@ const SliderOne = () => {
                             className={styles.sliderImage}
                           />
                         )}
+                        <div className="position-absolute bottom-0 end-0 translate-middle">
+                          <span>
+                            <IoHeartOutline color="#333333" size={24} />
+                          </span>
+                        </div>
+                        <div className="position-absolute top-0 end-0 pe-2">
+                          {product?.tags?.map((tag) => {
+                            const lowerTag = tag.toLowerCase().trim();
+                            // Fall back to original tag string if a local map doesn't exist
+                            const translatedTag =
+                              tagTranslations[currentLocale]?.[lowerTag] || tag;
+
+                            return (
+                              <span key={tag} className={styles.tagsText}>
+                                {translatedTag}
+                              </span>
+                            );
+                          })}
+                        </div>
                       </div>
                       <div className="text-center">
-                        <p>{product?.title}</p>
-                        <p>{product?.description}</p>
-                        <p>
-                          {Math.round(product?.price)} {product?.currency}
-                        </p>
+                        <Link
+                          href={`/shop/${product?.handle}`}
+                          className="text-decoration-none"
+                        >
+                          <p className={styles.title}>{product?.title}</p>
+                          <div
+                            className={styles.description}
+                            dangerouslySetInnerHTML={{
+                              __html: product.description,
+                            }}
+                          />
+                          <p className={styles.price}>
+                            {Math.round(product?.price)} {product?.currency}
+                          </p>
+                        </Link>
+                        <div className={styles.sliderBtnWrapper}>
+                          <button className={styles.sliderBtn}>
+                            {currentLocale === "es"
+                              ? "agregar a su carrito"
+                              : currentLocale === "fr"
+                                ? "ajouter à votre panier"
+                                : "add to your cart"}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -170,6 +243,20 @@ const SliderOne = () => {
                   <span>Loading tailored catalog collections...</span>
                 </div>
               )}
+            </div>
+            <div className={styles.allLinkWrapper}>
+              <Link href="/shop-all" className={styles.allLink}>
+                <span>
+                  {currentLocale === "es"
+                    ? "todos los productos"
+                    : currentLocale === "fr"
+                      ? "tous les produits"
+                      : "all products"}
+                  <span className="ms-3">
+                    <LiaArrowRightSolid color="#333333" size={24} />
+                  </span>
+                </span>
+              </Link>
             </div>
           </Col>
         </Row>

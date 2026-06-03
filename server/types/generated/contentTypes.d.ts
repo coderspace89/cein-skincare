@@ -505,7 +505,11 @@ export interface ApiHomePageHomePage extends Struct.SingleTypeSchema {
       'api::home-page.home-page'
     >;
     pageBlocks: Schema.Attribute.DynamicZone<
-      ['blocks.image-with-text', 'blocks.product-carousel']
+      [
+        'blocks.image-with-text',
+        'blocks.product-carousel',
+        'blocks.text-over-image',
+      ]
     > &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
