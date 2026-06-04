@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import styles from "./SliderOne.module.css";
+import styles from "./SliderTwo.module.css";
 import qs from "qs";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -15,7 +15,7 @@ import Col from "react-bootstrap/Col";
 import Image from "next/image";
 import Link from "next/link";
 
-const SliderOne = () => {
+const SliderTwo = () => {
   const { locale } = useLocale();
   const [sliderData, setSliderData] = useState(null);
   const [shopifyProducts, setShopifyProducts] = useState([]);
@@ -48,13 +48,13 @@ const SliderOne = () => {
         const response = await fetch(`/api/home-page?${query}`);
         const data = await response.json();
 
-        // Find the specific block explicitly instead of hardcoding index [0]
-        // to prevent bugs if block arrays shift positions
-        const carouselBlock =
-          data?.data?.pageBlocks?.find(
+        const carousels =
+          data?.data?.pageBlocks?.filter(
             (block) => block.__component === "blocks.product-carousel",
-          ) || data?.data?.pageBlocks?.[0];
+          ) || [];
 
+        // Grab the SECOND carousel block
+        const carouselBlock = carousels[1];
         setSliderData(carouselBlock);
       } catch (error) {
         console.error("Error fetching block data:", error);
@@ -98,9 +98,9 @@ const SliderOne = () => {
       })
       .then((products) => {
         if (isMounted) {
-          // 👈 Slice the array to save ONLY the first 5 items
-          const firstFiveProducts = products.slice(0, 5);
-          setShopifyProducts(firstFiveProducts);
+          // 👈 Slice the array starting at index 5 to get items 6 through 10
+          const remainingProducts = products.slice(4);
+          setShopifyProducts(remainingProducts);
         }
       })
       .catch((err) => {
@@ -273,4 +273,4 @@ const SliderOne = () => {
   );
 };
 
-export default SliderOne;
+export default SliderTwo;

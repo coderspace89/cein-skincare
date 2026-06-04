@@ -35,7 +35,8 @@
       "components": [
         "blocks.image-with-text",
         "blocks.product-carousel",
-        "blocks.text-over-image"
+        "blocks.text-over-image",
+        "blocks.text-statement"
       ]
     }
   }

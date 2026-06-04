@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_blocks_text_statements",
+  "info": {
+    "displayName": "TextStatement"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "text"
+    },
+    "subtitle": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

@@ -509,6 +509,7 @@ export interface ApiHomePageHomePage extends Struct.SingleTypeSchema {
         'blocks.image-with-text',
         'blocks.product-carousel',
         'blocks.text-over-image',
+        'blocks.text-statement',
       ]
     > &
       Schema.Attribute.SetPluginOptions<{

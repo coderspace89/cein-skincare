@@ -76,6 +76,17 @@ export interface BlocksTextOverImage extends Struct.ComponentSchema {
   };
 }
 
+export interface BlocksTextStatement extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_text_statements';
+  info: {
+    displayName: 'TextStatement';
+  };
+  attributes: {
+    subtitle: Schema.Attribute.String;
+    title: Schema.Attribute.Text;
+  };
+}
+
 export interface ElementsNavLink extends Struct.ComponentSchema {
   collectionName: 'components_elements_nav_links';
   info: {
@@ -153,6 +164,7 @@ declare module '@strapi/strapi' {
       'blocks.nav-column': BlocksNavColumn;
       'blocks.product-carousel': BlocksProductCarousel;
       'blocks.text-over-image': BlocksTextOverImage;
+      'blocks.text-statement': BlocksTextStatement;
       'elements.nav-link': ElementsNavLink;
       'elements.nav-promo': ElementsNavPromo;
       'elements.product-handles': ElementsProductHandles;
