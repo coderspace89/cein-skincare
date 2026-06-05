@@ -112,8 +112,6 @@ const SliderOne = () => {
     };
   }, [sliderData, locale]);
 
-  console.log(shopifyProducts);
-
   // Update your dictionary to use string keys with a space:
   const tagTranslations = {
     en: {

@@ -32,6 +32,17 @@ export interface BlocksImageWithText extends Struct.ComponentSchema {
   };
 }
 
+export interface BlocksJournalGrid extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_journal_grids';
+  info: {
+    displayName: 'JournalGrid';
+  };
+  attributes: {
+    subtitle: Schema.Attribute.String;
+    title: Schema.Attribute.String;
+  };
+}
+
 export interface BlocksNavColumn extends Struct.ComponentSchema {
   collectionName: 'components_blocks_nav_columns';
   info: {
@@ -84,6 +95,31 @@ export interface BlocksTextStatement extends Struct.ComponentSchema {
   attributes: {
     subtitle: Schema.Attribute.String;
     title: Schema.Attribute.Text;
+  };
+}
+
+export interface BlocksUserVoiceGallery extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_user_voice_galleries';
+  info: {
+    displayName: 'UserVoiceGallery';
+  };
+  attributes: {
+    buttonLabel: Schema.Attribute.String;
+    buttonUrl: Schema.Attribute.String;
+    items: Schema.Attribute.Component<'elements.gallery-item', true>;
+    title: Schema.Attribute.String;
+  };
+}
+
+export interface ElementsGalleryItem extends Struct.ComponentSchema {
+  collectionName: 'components_elements_gallery_items';
+  info: {
+    displayName: 'GalleryItem';
+  };
+  attributes: {
+    image: Schema.Attribute.Media<'images'>;
+    linkUrl: Schema.Attribute.String;
+    showIcon: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
   };
 }
 
@@ -161,10 +197,13 @@ declare module '@strapi/strapi' {
     export interface ComponentSchemas {
       'blocks.hero-section': BlocksHeroSection;
       'blocks.image-with-text': BlocksImageWithText;
+      'blocks.journal-grid': BlocksJournalGrid;
       'blocks.nav-column': BlocksNavColumn;
       'blocks.product-carousel': BlocksProductCarousel;
       'blocks.text-over-image': BlocksTextOverImage;
       'blocks.text-statement': BlocksTextStatement;
+      'blocks.user-voice-gallery': BlocksUserVoiceGallery;
+      'elements.gallery-item': ElementsGalleryItem;
       'elements.nav-link': ElementsNavLink;
       'elements.nav-promo': ElementsNavPromo;
       'elements.product-handles': ElementsProductHandles;

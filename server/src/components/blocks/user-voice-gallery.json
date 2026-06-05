@@ -1,0 +1,24 @@
+{
+  "collectionName": "components_blocks_user_voice_galleries",
+  "info": {
+    "displayName": "UserVoiceGallery"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "buttonLabel": {
+      "type": "string"
+    },
+    "buttonUrl": {
+      "type": "string"
+    },
+    "items": {
+      "type": "component",
+      "component": "elements.gallery-item",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

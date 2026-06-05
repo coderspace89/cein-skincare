@@ -36,7 +36,9 @@
         "blocks.image-with-text",
         "blocks.product-carousel",
         "blocks.text-over-image",
-        "blocks.text-statement"
+        "blocks.text-statement",
+        "blocks.user-voice-gallery",
+        "blocks.journal-grid"
       ]
     }
   }

@@ -1,0 +1,24 @@
+{
+  "collectionName": "components_elements_gallery_items",
+  "info": {
+    "displayName": "GalleryItem"
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "linkUrl": {
+      "type": "string"
+    },
+    "showIcon": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "config": {}
+}
