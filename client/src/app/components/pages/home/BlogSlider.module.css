@@ -1,3 +1,68 @@
 .container {
   padding: 100px 0;
 }
+
+.blogImage {
+  width: 100%;
+  height: 100%;
+  margin-bottom: 40px;
+}
+
+.categoryText {
+  color: var(--cartBtnBorder);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  display: block;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.titleWrapper {
+  margin-bottom: 40px;
+}
+
+.titleText {
+  color: var(--foreground);
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: capitalize;
+}
+
+.linkText {
+  color: var(--foreground);
+  font-weight: 400;
+  font-size: 14px;
+  text-transform: capitalize;
+}
+
+.sectionTitleWrapper {
+  margin-bottom: 32px;
+}
+
+.subtitleText {
+  color: var(--foreground);
+  font-weight: 400;
+  font-size: 14px;
+  text-transform: capitalize;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.sectionTitle {
+  color: var(--foreground);
+  font-weight: 400;
+  font-size: clamp(24px, 3vw, 30px);
+  text-transform: capitalize;
+}
+
+.allLinkWrapper {
+  margin-top: 50px;
+}
+
+.allLink {
+  color: var(--foreground);
+  font-weight: 400;
+  font-size: 14px;
+  text-transform: capitalize;
+  text-decoration: none;
+}

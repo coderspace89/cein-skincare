@@ -24,6 +24,16 @@
       },
       "component": "layout.header",
       "repeatable": false
+    },
+    "footer": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "layout.footer",
+      "repeatable": false
     }
   }
 }

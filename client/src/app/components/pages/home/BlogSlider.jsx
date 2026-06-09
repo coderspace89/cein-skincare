@@ -19,6 +19,7 @@ const BlogSlider = () => {
   const [blogData, setBlogData] = useState([]);
   const [blockData, setBlockData] = useState(null);
   const { locale } = useLocale();
+  const currentLocale = locale.toLowerCase();
 
   const query = qs.stringify(
     {
@@ -119,29 +120,61 @@ const BlogSlider = () => {
       <Container>
         <Row>
           <Col lg={12}>
-            <div>
-              <span>{blockData?.subtitle}</span>
-              <h2>{blockData?.title}</h2>
+            <div className={styles.sectionTitleWrapper}>
+              <span className={styles.subtitleText}>{blockData?.subtitle}</span>
+              <h2 className={styles.sectionTitle}>{blockData?.title}</h2>
             </div>
           </Col>
           <Col lg={12}>
-            <div className="slider-container">
+            <div className="slider-container" id="blog-slider">
               <Slider {...settings}>
                 {blogData?.map((blogItem) => (
                   <div key={blogItem?.id}>
-                    <Link href={`/journal/${blogItem?.slug}`}>
+                    <Link
+                      href={`/journal/${blogItem?.slug}`}
+                      className="text-decoration-none"
+                    >
                       {blogItem?.featuredImage && (
                         <Image
                           src={getStrapiMedia(blogItem?.featuredImage?.url)}
                           width={blogItem?.featuredImage?.width}
                           height={blogItem?.featuredImage?.height}
                           alt={blogItem?.featuredImage?.name}
+                          className={styles.blogImage}
                         />
                       )}
+                      <div className={styles.titleWrapper}>
+                        <span className={styles.categoryText}>
+                          {blogItem?.category}
+                        </span>
+                        <p className={styles.titleText}>{blogItem?.title}</p>
+                      </div>
+                      <div>
+                        <span className={styles.linkText}>
+                          {blogItem?.linkText}
+                          <span className="ms-3">
+                            <LiaArrowRightSolid color="#333333" size={24} />
+                          </span>
+                        </span>
+                      </div>
                     </Link>
                   </div>
                 ))}
               </Slider>
+            </div>
+            <div className={styles.allLinkWrapper}>
+              <Link href="/journal" className={styles.allLink}>
+                <span>
+                  {currentLocale === "es"
+                    ? "Todas las entradas del blog"
+                    : currentLocale === "fr"
+                      ? "tous les articles de blog"
+                      : "all blog posts"}
+                  <span className="ms-3">
+                    <LiaArrowRightSolid color="#333333" size={24} />
+                  </span>
+                </span>
+              </Link>
             </div>
           </Col>
         </Row>

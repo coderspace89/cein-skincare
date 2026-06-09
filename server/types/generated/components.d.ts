@@ -155,6 +155,20 @@ export interface ElementsProductHandles extends Struct.ComponentSchema {
   };
 }
 
+export interface LayoutFooter extends Struct.ComponentSchema {
+  collectionName: 'components_layout_footers';
+  info: {
+    displayName: 'Footer';
+  };
+  attributes: {
+    copyrightText: Schema.Attribute.String;
+    footerColumns: Schema.Attribute.Component<'blocks.nav-column', true>;
+    legalLinks: Schema.Attribute.Component<'elements.nav-link', true>;
+    logoImage: Schema.Attribute.Media<'images'>;
+    socialLinks: Schema.Attribute.Component<'elements.nav-link', true>;
+  };
+}
+
 export interface LayoutHeader extends Struct.ComponentSchema {
   collectionName: 'components_layout_headers';
   info: {
@@ -207,6 +221,7 @@ declare module '@strapi/strapi' {
       'elements.nav-link': ElementsNavLink;
       'elements.nav-promo': ElementsNavPromo;
       'elements.product-handles': ElementsProductHandles;
+      'layout.footer': LayoutFooter;
       'layout.header': LayoutHeader;
       'menu.nav-items': MenuNavItems;
       'menu.nav-megamenu': MenuNavMegamenu;
