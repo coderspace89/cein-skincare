@@ -5,6 +5,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "@/app/components/layout/Header";
 import { LocaleProvider } from "@/context/LocaleContext";
 import Footer from "@/app/components/layout/Footer";
+import GlobalLoader from "@/app/components/common/GlobalLoader";
+import PromoModal from "@/app/components/common/PromoModal";
 
 const arimo = Arimo({
   variable: "--font-arimo",
@@ -32,7 +34,9 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${arimo.variable} ${myFont.variable}`}>
       <body>
         <LocaleProvider>
+          <GlobalLoader />
           <Header />
+          <PromoModal />
           {children}
           <Footer />
         </LocaleProvider>

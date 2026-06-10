@@ -72,6 +72,24 @@ export interface BlocksProductCarousel extends Struct.ComponentSchema {
   };
 }
 
+export interface BlocksPromoModal extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_promo_modals';
+  info: {
+    displayName: 'Promo Modal';
+  };
+  attributes: {
+    backgroundColor: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'#f4f4f0'>;
+    buttonLabel: Schema.Attribute.String;
+    description: Schema.Attribute.Text;
+    disclaimerText: Schema.Attribute.RichText;
+    image: Schema.Attribute.Media<'images'>;
+    inputPlaceholder: Schema.Attribute.String;
+    isActive: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    title: Schema.Attribute.String;
+  };
+}
+
 export interface BlocksTextOverImage extends Struct.ComponentSchema {
   collectionName: 'components_blocks_text_over_images';
   info: {
@@ -214,6 +232,7 @@ declare module '@strapi/strapi' {
       'blocks.journal-grid': BlocksJournalGrid;
       'blocks.nav-column': BlocksNavColumn;
       'blocks.product-carousel': BlocksProductCarousel;
+      'blocks.promo-modal': BlocksPromoModal;
       'blocks.text-over-image': BlocksTextOverImage;
       'blocks.text-statement': BlocksTextStatement;
       'blocks.user-voice-gallery': BlocksUserVoiceGallery;
