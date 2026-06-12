@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_blocks_listing_heroes",
+  "info": {
+    "displayName": "Listing Hero"
+  },
+  "options": {},
+  "attributes": {
+    "backgroundImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}

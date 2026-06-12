@@ -201,11 +201,16 @@ const SliderOne = () => {
                           </span>
                         </div>
                         <div className="position-absolute top-0 end-0 pe-2">
-                          {product?.tags?.map((tag) => {
+                          {product?.tags?.map((tag, idx) => {
                             const lowerTag = tag.toLowerCase().trim();
                             // Fall back to original tag string if a local map doesn't exist
                             const translatedTag =
-                              tagTranslations[currentLocale]?.[lowerTag] || tag;
+                              idx === 0 &&
+                              tag !== "shop all" &&
+                              tag !== "cleanse"
+                                ? tagTranslations[currentLocale]?.[lowerTag] ||
+                                  tag
+                                : "";
 
                             return (
                               <span key={tag} className={styles.tagsText}>

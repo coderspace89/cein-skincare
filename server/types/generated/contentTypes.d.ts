@@ -605,6 +605,80 @@ export interface ApiHomePageHomePage extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiProductListingPageProductListingPage
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'product_listing_pages';
+  info: {
+    displayName: 'Product Listing Page';
+    pluralName: 'product-listing-pages';
+    singularName: 'product-listing-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    gridSubtitle: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    gridTitle: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    heroBanner: Schema.Attribute.Component<'blocks.listing-hero', false> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::product-listing-page.product-listing-page'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    shopifyCollectionHandle: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    slug: Schema.Attribute.UID<'title'> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    subCategories: Schema.Attribute.Component<'elements.nav-link', true> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiStoreStore extends Struct.CollectionTypeSchema {
   collectionName: 'stores';
   info: {
@@ -1189,6 +1263,7 @@ declare module '@strapi/strapi' {
       'api::blog-post.blog-post': ApiBlogPostBlogPost;
       'api::global.global': ApiGlobalGlobal;
       'api::home-page.home-page': ApiHomePageHomePage;
+      'api::product-listing-page.product-listing-page': ApiProductListingPageProductListingPage;
       'api::store.store': ApiStoreStore;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

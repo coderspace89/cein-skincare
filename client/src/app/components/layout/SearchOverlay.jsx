@@ -236,7 +236,11 @@ export default function SearchOverlay({ isOpen, onClose }) {
                                       textTransform: "uppercase",
                                     }}
                                   >
-                                    {getLocalizedTag(tag)}
+                                    {getLocalizedTag(
+                                      idx === 0 && tag !== "shop all"
+                                        ? tag
+                                        : "",
+                                    )}
                                   </span>
                                 ))}
                               </div>

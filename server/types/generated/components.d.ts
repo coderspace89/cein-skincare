@@ -43,6 +43,18 @@ export interface BlocksJournalGrid extends Struct.ComponentSchema {
   };
 }
 
+export interface BlocksListingHero extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_listing_heroes';
+  info: {
+    displayName: 'Listing Hero';
+  };
+  attributes: {
+    backgroundImage: Schema.Attribute.Media<'images'>;
+    description: Schema.Attribute.Text;
+    title: Schema.Attribute.String;
+  };
+}
+
 export interface BlocksNavColumn extends Struct.ComponentSchema {
   collectionName: 'components_blocks_nav_columns';
   info: {
@@ -147,6 +159,7 @@ export interface ElementsNavLink extends Struct.ComponentSchema {
     displayName: 'Nav Link';
   };
   attributes: {
+    filterTag: Schema.Attribute.String;
     label: Schema.Attribute.String;
     url: Schema.Attribute.String;
   };
@@ -230,6 +243,7 @@ declare module '@strapi/strapi' {
       'blocks.hero-section': BlocksHeroSection;
       'blocks.image-with-text': BlocksImageWithText;
       'blocks.journal-grid': BlocksJournalGrid;
+      'blocks.listing-hero': BlocksListingHero;
       'blocks.nav-column': BlocksNavColumn;
       'blocks.product-carousel': BlocksProductCarousel;
       'blocks.promo-modal': BlocksPromoModal;
