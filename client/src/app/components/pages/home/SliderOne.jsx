@@ -256,7 +256,10 @@ const SliderOne = () => {
               )}
             </div>
             <div className={styles.allLinkWrapper}>
-              <Link href="/shop-all" className={styles.allLink}>
+              <Link
+                href={sliderData?.viewAllUrl || "/shop-all"}
+                className={styles.allLink}
+              >
                 <span>
                   {currentLocale === "es"
                     ? "todos los productos"

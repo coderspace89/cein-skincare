@@ -11,6 +11,7 @@ import Link from "next/link";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { IoLogoInstagram } from "react-icons/io";
 
 const UserVoiceGallery = () => {
   const [blockData, setBlockData] = useState(null);
@@ -61,7 +62,7 @@ const UserVoiceGallery = () => {
             </div>
             <div className={styles.userGrid}>
               {blockData?.items?.map((item) => (
-                <div key={item?.id}>
+                <div key={item?.id} className="position-relative">
                   <Link href={item.linkUrl}>
                     {item?.image && (
                       <Image
@@ -72,6 +73,9 @@ const UserVoiceGallery = () => {
                         className={styles.galleryImage}
                       />
                     )}
+                    <div className="position-absolute bottom-0 end-0 p-3">
+                      <IoLogoInstagram color="#fff" size={24} />
+                    </div>
                   </Link>
                 </div>
               ))}
