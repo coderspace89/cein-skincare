@@ -5,6 +5,8 @@
   --linkText: #676660;
   --storeInfoBlock: #f2f3ec;
   --mobileMenuLinkBorder: #cdcbc0;
+  --statementBlockBg: #e8e8dd;
+  --cartBtnBorder: #cdcbc0;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -59,4 +61,12 @@ a {
   html {
     color-scheme: dark;
   }
+}
+
+#blog-slider .slick-list > div {
+  margin: 0 -2px;
+}
+
+#blog-slider .slick-slide > div {
+  padding: 0 2px;
 }

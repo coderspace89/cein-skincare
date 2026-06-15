@@ -1,0 +1,30 @@
+{
+  "collectionName": "components_blocks_product_carousels",
+  "info": {
+    "displayName": "ProductCarousel"
+  },
+  "options": {},
+  "attributes": {
+    "subtitle": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "viewAllLabel": {
+      "type": "string"
+    },
+    "viewAllUrl": {
+      "type": "string"
+    },
+    "productHandles": {
+      "type": "component",
+      "component": "elements.product-handles",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

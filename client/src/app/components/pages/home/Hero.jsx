@@ -9,10 +9,10 @@ import Col from "react-bootstrap/Col";
 import qs from "qs";
 import { useLocale } from "@/context/LocaleContext";
 import { getStrapiMedia } from "@/lib/utils";
-
 // Import slick-carousel css files directly into your component
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { LiaArrowRightSolid } from "react-icons/lia";
 
 const Hero = () => {
   const [heroData, setHeroData] = useState(null);
@@ -31,7 +31,7 @@ const Hero = () => {
           },
         },
       },
-      { encodeValuesOnly: true }
+      { encodeValuesOnly: true },
     );
   }, [locale]);
 
@@ -51,13 +51,13 @@ const Hero = () => {
 
   // Slick Slider settings optimized for background cross-fades
   const sliderSettings = {
-    dots: false,          // Keeps it clean, set to true if you want navigation dots
-    fade: true,           // Cross-fade animation looks much more premium for hero backgrounds
+    dots: true, // Keeps it clean, set to true if you want navigation dots
+    fade: true, // Cross-fade animation looks much more premium for hero backgrounds
     infinite: true,
-    speed: 1000,          // Transition duration (1 second)
+    speed: 1000, // Transition duration (1 second)
     autoplay: true,
-    autoplaySpeed: 5000,  // Stay on each image for 5 seconds
-    arrows: false,        // Hide side arrows so it looks like a clean background
+    autoplaySpeed: 5000, // Stay on each image for 5 seconds
+    arrows: false, // Hide side arrows so it looks like a clean background
     slidesToShow: 1,
     slidesToScroll: 1,
     pauseOnHover: false,
@@ -95,8 +95,13 @@ const Hero = () => {
                 <span className={heroStyles.subtitle}>{heroData.subtitle}</span>
                 <h1 className={heroStyles.title}>{heroData.title}</h1>
                 <p className={heroStyles.description}>{heroData.description}</p>
-                <a href={heroData.ctaUrl} className="btn btn-outline-light px-4 py-2">
-                  {heroData.ctaLabel}
+                <a href={heroData.ctaUrl} className={heroStyles.ctaBtn}>
+                  <span>
+                    {heroData.ctaLabel}
+                    <span className="ms-3">
+                      <LiaArrowRightSolid color="#fff" size={24} />
+                    </span>
+                  </span>
                 </a>
               </div>
             )}

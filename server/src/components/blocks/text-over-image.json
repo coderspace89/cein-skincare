@@ -1,0 +1,32 @@
+{
+  "collectionName": "components_blocks_text_over_images",
+  "info": {
+    "displayName": "TextOverImage"
+  },
+  "options": {},
+  "attributes": {
+    "subtitle": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "backgroundImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "ctaLabel": {
+      "type": "string"
+    },
+    "ctaLink": {
+      "type": "string"
+    },
+    "description": {
+      "type": "richtext"
+    }
+  },
+  "config": {}
+}

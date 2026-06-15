@@ -1,8 +1,14 @@
 .headerSection {
-  position: relative;
+  /* position: relative;
   width: 100%;
-  z-index: 1000;
+  z-index: 1030; */
   border-bottom: 1px solid var(--foreground);
+  position: fixed; /* Bypasses Bootstrap's .fixed-top entirely */
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 9999; /* Higher index ensures it floats over headers/hero carousels */
 }
 
 .topbarContainer {
@@ -561,8 +567,8 @@
   background-color: var(--navbg);
   display: flex;
   align-items: center;
-  /* position: fixed;
-  width: 100%; */
+  /* position: fixed; */
+  width: 100%;
   border-bottom: 1px solid var(--foreground);
 }
 
@@ -587,12 +593,10 @@
 /* --- Shift Mobile Drawer Drawer Below The Active Navbar Anchor --- */
 .mobileMenuOverlay {
   position: absolute;
-  top: 120px;
-  /* Matches navbar height perfectly to reveal the header strip */
+  top: 100%;
   left: 0;
   width: 100%;
-  /* Takes standard remaining visual screen space calculation rules */
-  height: calc(100vh - 64px);
+  height: calc(100vh - 100%);
   background-color: var(--navbg);
   z-index: 9999;
   display: flex;

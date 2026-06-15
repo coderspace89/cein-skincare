@@ -1,105 +1,208 @@
 .container {
-    min-height: 100vh;
-    width: 100%;
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    display: flex;
-    align-items: center;
-    position: relative;
+  min-height: 100vh;
+  width: 100%;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  position: relative;
 }
 
 /* Optional Dark Overlay Mask to increase copy readability */
 .container::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.15);
-    /* Adjust opacity depending on asset brightness */
-    z-index: 1;
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.15);
+  /* Adjust opacity depending on asset brightness */
+  z-index: 1;
 }
 
 .contentBlock {
-    position: relative;
-    z-index: 2;
-    /* Sits cleanly above the darker mask layer */
-    color: #ffffff;
+  position: relative;
+  z-index: 2;
+  /* Sits cleanly above the darker mask layer */
+  color: #ffffff;
 }
 
 .heroWrapper {
-    position: relative;
-    min-height: 100vh;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    background-color: #1a1a1a;
-    /* Dark fallback color while loading images */
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background-color: #1a1a1a;
+  padding-top: 100px;
+  /* Dark fallback color while loading images */
 }
 
 /* Position the slider container to take up exactly the full scope of the section */
 .sliderContainer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
 }
 
 /* Force the slick track elements to match full viewport limits */
 .slide,
 .slideImage {
-    width: 100vw;
-    height: 100vh;
+  width: 100vw;
+  height: 100vh;
 }
 
 .slideImage {
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 
 /* Elegant dark mask layered over the images but under the content text */
 .overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.2);
-    /* Adjust opacity depending on asset brightness */
-    z-index: 2;
-    pointer-events: none;
-    /* Allows user clicks to fall through to structural content layout elements */
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2);
+  /* Adjust opacity depending on asset brightness */
+  z-index: 2;
+  pointer-events: none;
+  /* Allows user clicks to fall through to structural content layout elements */
 }
 
 /* Push your copy content layer securely above the background carousel slider */
 .contentContainer {
-    position: relative;
-    z-index: 3;
+  position: relative;
+  z-index: 3;
 }
 
 .contentBlock {
-    color: #ffffff;
+  color: #ffffff;
 }
 
 .subtitle {
-    display: block;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom: 1rem;
-    opacity: 0.9;
+  display: block;
+  font-size: 14px;
+  text-transform: capitalize;
+  margin-bottom: 1rem;
 }
 
 .title {
-    font-size: 3.5rem;
-    font-weight: 500;
-    line-height: 1.2;
-    margin-bottom: 1.5rem;
+  font-size: clamp(24px, 3vw, 30px);
+  font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
 }
 
 .description {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    margin-bottom: 2rem;
-    opacity: 0.85;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+  opacity: 0.85;
+}
+
+.ctaBtn {
+  padding: 19px 23px;
+  background-color: transparent;
+  color: var(--background);
+  border-radius: 0;
+  border: 1px solid var(--background);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Keep your existing desktop styles above this line */
+
+@media (max-width: 767px) {
+  .heroWrapper {
+    display: flex;
+    flex-direction: column; /* Stacks the image layer above the content layer */
+    min-height: auto;
+    height: auto;
+    padding-top: 0; /* Clear header offset on mobile if needed, or adjust to fit */
+    background-color: #333333; /* Dark background matching image_40511d.jpg */
+  }
+
+  /* Make the slider container occupy a fixed portion at the top */
+  .sliderContainer {
+    position: relative; /* Change from absolute to sit in the flex stack */
+    width: 100%;
+    height: 50vh; /* Gives the image an explicit half-screen height */
+  }
+
+  .slide,
+  .slideImage {
+    width: 100%;
+    height: 50vh; /* Match the parent container height */
+  }
+
+  /* Text content area configuration */
+  .contentContainer {
+    width: 100%;
+    padding: 40px 24px 60px 24px; /* Added extra bottom padding for slider dots space */
+    background-color: #333333; /* Solid background matching the panel below the image */
+  }
+
+  .title {
+    font-size: clamp(
+      24px,
+      3vw,
+      30px
+    ); /* Scale down heading slightly for mobile screens */
+    margin-bottom: 1.2rem;
+  }
+
+  .description {
+    font-size: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .ctaBtn {
+    display: inline-flex;
+    justify-content: space-between; /* Pushes the text and arrow to opposite sides */
+    padding: 16px 20px;
+  }
+
+  /* =========================================================================
+     SLICK CAROUSEL PAGINATION DOTS STYLING
+     ========================================================================= */
+
+  /* Target the global Slick slick-dots container */
+  :global(.slick-dots) {
+    bottom: 20px !important; /* Positions dots at the absolute bottom of the hero wrapper */
+    left: 0;
+    width: 100%;
+    display: flex !important;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    z-index: 10;
+  }
+
+  :global(.slick-dots li) {
+    margin: 0 5px;
+    flex: 1; /* Allows them to expand as lines if desired */
+    max-width: 40px; /* Width of each line indicator */
+    height: 2px;
+  }
+
+  :global(.slick-dots li button) {
+    width: 100%;
+    height: 2px;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.3) !important; /* Dimmed inactive line */
+    border: none;
+    outline: none;
+    font-size: 0; /* Hides default slider numbers */
+    transition: background 0.3s ease;
+  }
+
+  /* Active line state indicator */
+  :global(.slick-dots li.slick-active button) {
+    background: #ffffff !important; /* Pure white active indicator line */
+  }
 }

@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_blocks_journal_grids",
+  "info": {
+    "displayName": "JournalGrid"
+  },
+  "options": {},
+  "attributes": {
+    "subtitle": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

@@ -15,6 +15,46 @@ export interface BlocksHeroSection extends Struct.ComponentSchema {
   };
 }
 
+export interface BlocksImageWithText extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_image_with_texts';
+  info: {
+    displayName: 'ImageWithText';
+  };
+  attributes: {
+    ctaLabel: Schema.Attribute.String;
+    ctaUrl: Schema.Attribute.String;
+    description: Schema.Attribute.Text;
+    image: Schema.Attribute.Media<'images'>;
+    imagePosition: Schema.Attribute.Enumeration<['left', 'right']> &
+      Schema.Attribute.DefaultTo<'left'>;
+    subtitle: Schema.Attribute.String;
+    title: Schema.Attribute.String;
+  };
+}
+
+export interface BlocksJournalGrid extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_journal_grids';
+  info: {
+    displayName: 'JournalGrid';
+  };
+  attributes: {
+    subtitle: Schema.Attribute.String;
+    title: Schema.Attribute.String;
+  };
+}
+
+export interface BlocksListingHero extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_listing_heroes';
+  info: {
+    displayName: 'Listing Hero';
+  };
+  attributes: {
+    backgroundImage: Schema.Attribute.Media<'images'>;
+    description: Schema.Attribute.Text;
+    title: Schema.Attribute.String;
+  };
+}
+
 export interface BlocksNavColumn extends Struct.ComponentSchema {
   collectionName: 'components_blocks_nav_columns';
   info: {
@@ -26,12 +66,100 @@ export interface BlocksNavColumn extends Struct.ComponentSchema {
   };
 }
 
+export interface BlocksProductCarousel extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_product_carousels';
+  info: {
+    displayName: 'ProductCarousel';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    productHandles: Schema.Attribute.Component<
+      'elements.product-handles',
+      true
+    >;
+    subtitle: Schema.Attribute.String;
+    title: Schema.Attribute.String;
+    viewAllLabel: Schema.Attribute.String;
+    viewAllUrl: Schema.Attribute.String;
+  };
+}
+
+export interface BlocksPromoModal extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_promo_modals';
+  info: {
+    displayName: 'Promo Modal';
+  };
+  attributes: {
+    backgroundColor: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'#f4f4f0'>;
+    buttonLabel: Schema.Attribute.String;
+    description: Schema.Attribute.Text;
+    disclaimerText: Schema.Attribute.RichText;
+    image: Schema.Attribute.Media<'images'>;
+    inputPlaceholder: Schema.Attribute.String;
+    isActive: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    title: Schema.Attribute.String;
+  };
+}
+
+export interface BlocksTextOverImage extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_text_over_images';
+  info: {
+    displayName: 'TextOverImage';
+  };
+  attributes: {
+    backgroundImage: Schema.Attribute.Media<'images'>;
+    ctaLabel: Schema.Attribute.String;
+    ctaLink: Schema.Attribute.String;
+    description: Schema.Attribute.RichText;
+    subtitle: Schema.Attribute.String;
+    title: Schema.Attribute.String;
+  };
+}
+
+export interface BlocksTextStatement extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_text_statements';
+  info: {
+    displayName: 'TextStatement';
+  };
+  attributes: {
+    subtitle: Schema.Attribute.String;
+    title: Schema.Attribute.Text;
+  };
+}
+
+export interface BlocksUserVoiceGallery extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_user_voice_galleries';
+  info: {
+    displayName: 'UserVoiceGallery';
+  };
+  attributes: {
+    buttonLabel: Schema.Attribute.String;
+    buttonUrl: Schema.Attribute.String;
+    items: Schema.Attribute.Component<'elements.gallery-item', true>;
+    title: Schema.Attribute.String;
+  };
+}
+
+export interface ElementsGalleryItem extends Struct.ComponentSchema {
+  collectionName: 'components_elements_gallery_items';
+  info: {
+    displayName: 'GalleryItem';
+  };
+  attributes: {
+    image: Schema.Attribute.Media<'images'>;
+    linkUrl: Schema.Attribute.String;
+    showIcon: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+  };
+}
+
 export interface ElementsNavLink extends Struct.ComponentSchema {
   collectionName: 'components_elements_nav_links';
   info: {
     displayName: 'Nav Link';
   };
   attributes: {
+    filterTag: Schema.Attribute.String;
     label: Schema.Attribute.String;
     url: Schema.Attribute.String;
   };
@@ -45,6 +173,30 @@ export interface ElementsNavPromo extends Struct.ComponentSchema {
   attributes: {
     image: Schema.Attribute.Media<'images'>;
     linkUrl: Schema.Attribute.String;
+  };
+}
+
+export interface ElementsProductHandles extends Struct.ComponentSchema {
+  collectionName: 'components_elements_product_handles';
+  info: {
+    displayName: 'productHandles';
+  };
+  attributes: {
+    handle: Schema.Attribute.String;
+  };
+}
+
+export interface LayoutFooter extends Struct.ComponentSchema {
+  collectionName: 'components_layout_footers';
+  info: {
+    displayName: 'Footer';
+  };
+  attributes: {
+    copyrightText: Schema.Attribute.String;
+    footerColumns: Schema.Attribute.Component<'blocks.nav-column', true>;
+    legalLinks: Schema.Attribute.Component<'elements.nav-link', true>;
+    logoImage: Schema.Attribute.Media<'images'>;
+    socialLinks: Schema.Attribute.Component<'elements.nav-link', true>;
   };
 }
 
@@ -89,9 +241,20 @@ declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'blocks.hero-section': BlocksHeroSection;
+      'blocks.image-with-text': BlocksImageWithText;
+      'blocks.journal-grid': BlocksJournalGrid;
+      'blocks.listing-hero': BlocksListingHero;
       'blocks.nav-column': BlocksNavColumn;
+      'blocks.product-carousel': BlocksProductCarousel;
+      'blocks.promo-modal': BlocksPromoModal;
+      'blocks.text-over-image': BlocksTextOverImage;
+      'blocks.text-statement': BlocksTextStatement;
+      'blocks.user-voice-gallery': BlocksUserVoiceGallery;
+      'elements.gallery-item': ElementsGalleryItem;
       'elements.nav-link': ElementsNavLink;
       'elements.nav-promo': ElementsNavPromo;
+      'elements.product-handles': ElementsProductHandles;
+      'layout.footer': LayoutFooter;
       'layout.header': LayoutHeader;
       'menu.nav-items': MenuNavItems;
       'menu.nav-megamenu': MenuNavMegamenu;

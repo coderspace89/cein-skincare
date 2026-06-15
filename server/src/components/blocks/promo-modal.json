@@ -1,0 +1,40 @@
+{
+  "collectionName": "components_blocks_promo_modals",
+  "info": {
+    "displayName": "Promo Modal"
+  },
+  "options": {},
+  "attributes": {
+    "description": {
+      "type": "text"
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true
+    },
+    "title": {
+      "type": "string"
+    },
+    "inputPlaceholder": {
+      "type": "string"
+    },
+    "buttonLabel": {
+      "type": "string"
+    },
+    "disclaimerText": {
+      "type": "richtext"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "#f4f4f0"
+    }
+  },
+  "config": {}
+}

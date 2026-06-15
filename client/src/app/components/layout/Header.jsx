@@ -19,6 +19,7 @@ import {
 } from "react-icons/io5"; // Premium minimal navigation line icons
 import dynamic from "next/dynamic";
 import { useLocale } from "@/context/LocaleContext";
+import SearchOverlay from "@/app/components/layout/SearchOverlay";
 
 const MapComponent = dynamic(() => import("./MapComponent"), {
   ssr: false,
@@ -39,6 +40,9 @@ const Header = () => {
   // --- Mobile Drawer Specific States ---
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeMobileSubMenu, setActiveMobileSubMenu] = useState(null); // Track loaded sub-view panel id or navigation context
+
+  // search overlay state
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const query = qs.stringify(
     {
@@ -194,12 +198,18 @@ const Header = () => {
           <div className="d-lg-none d-block">
             <Nav.Link
               as={Link}
-              href="/search"
+              href=""
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
               className={headerStyles.navLinks}
             >
               <CiSearch size={20} color="#333333" />
             </Nav.Link>
           </div>
+
+          <SearchOverlay
+            isOpen={isSearchOpen}
+            onClose={() => setIsSearchOpen(false)}
+          />
 
           {/* Desktop Only Navigation Core Context Links */}
           <div className={`${headerStyles.navLinkWrap} d-none d-lg-block`}>
@@ -446,8 +456,9 @@ const Header = () => {
           >
             <Nav.Link
               as={Link}
-              href="/search"
+              href=""
               className={`${headerStyles.navLinks} d-lg-block d-none`}
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
             >
               <CiSearch size={20} color="#333333" />
             </Nav.Link>
@@ -481,6 +492,11 @@ const Header = () => {
           </Nav>
         </Container>
       </Navbar>
+
+      <SearchOverlay
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+      />
 
       {/* =========================================================================
           FULLSCREEN MOBILE MENU DRAWER OVERLAY OVER CANVAS

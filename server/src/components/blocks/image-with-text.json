@@ -1,0 +1,40 @@
+{
+  "collectionName": "components_blocks_image_with_texts",
+  "info": {
+    "displayName": "ImageWithText"
+  },
+  "options": {},
+  "attributes": {
+    "description": {
+      "type": "text"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "ctaLabel": {
+      "type": "string"
+    },
+    "ctaUrl": {
+      "type": "string"
+    },
+    "imagePosition": {
+      "type": "enumeration",
+      "default": "left",
+      "enum": [
+        "left",
+        "right"
+      ]
+    }
+  },
+  "config": {}
+}
