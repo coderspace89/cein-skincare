@@ -1,0 +1,8 @@
+.container {
+  margin: 100px 0;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 400px;
+  padding: 120px 0;
+}
