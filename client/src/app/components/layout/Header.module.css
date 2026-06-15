@@ -20,7 +20,8 @@
 }
 
 .navItemContainer {
-  position: static; /* Vital for letting the mega menu expand full-width across the container layout */
+  position: static;
+  /* Vital for letting the mega menu expand full-width across the container layout */
 }
 
 .navLinks {
@@ -55,11 +56,14 @@
 .megaMenuDropdown::before {
   content: "";
   position: absolute;
-  top: -14px; /* Extends exactly 14px upwards to touch the header link */
+  top: -14px;
+  /* Extends exactly 14px upwards to touch the header link */
   left: 0;
   width: 100%;
-  height: 14px; /* Matches your margin-top height */
-  background: transparent; /* Totally invisible to the user */
+  height: 14px;
+  /* Matches your margin-top height */
+  background: transparent;
+  /* Totally invisible to the user */
 }
 
 /* Outer Layout: Base Grid splitting category columns tracks and promotional blocks */
@@ -117,7 +121,8 @@
 
 .menuLink:hover {
   color: #111111;
-  transform: translateX(4px); /* Fluid directional hint hover effect */
+  transform: translateX(4px);
+  /* Fluid directional hint hover effect */
 }
 
 /* Promo Card Layout Structuring */
@@ -175,6 +180,7 @@
     opacity: 0;
     transform: translateY(6px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -183,7 +189,8 @@
 
 .dropdownMapWrap {
   width: 100%;
-  height: 350px; /* ⚠️ MANDATORY: Leaflet requires an explicit numeric pixel height or rem value */
+  height: 350px;
+  /* ⚠️ MANDATORY: Leaflet requires an explicit numeric pixel height or rem value */
   position: relative;
   overflow: hidden;
 }
@@ -319,7 +326,8 @@
 .mobileMenuBody {
   flex-grow: 1;
   position: relative;
-  overflow: hidden; /* Contains sliding dynamic layers panels inside viewport framework bounds safely */
+  overflow: hidden;
+  /* Contains sliding dynamic layers panels inside viewport framework bounds safely */
 }
 
 /* Base Panel Slide Animation Infrastructure Setup Matrix */
@@ -553,8 +561,8 @@
   background-color: var(--navbg);
   display: flex;
   align-items: center;
-  position: fixed;
-  width: 100%;
+  /* position: fixed;
+  width: 100%; */
   border-bottom: 1px solid var(--foreground);
 }
 
@@ -564,7 +572,8 @@
   flex-direction: row !important;
   align-items: center !important;
   justify-content: flex-end;
-  gap: 12px; /* Uniform horizontal item distribution */
+  gap: 12px;
+  /* Uniform horizontal item distribution */
 }
 
 .navIconLink {
@@ -578,7 +587,8 @@
 /* --- Shift Mobile Drawer Drawer Below The Active Navbar Anchor --- */
 .mobileMenuOverlay {
   position: absolute;
-  top: 120px; /* Matches navbar height perfectly to reveal the header strip */
+  top: 120px;
+  /* Matches navbar height perfectly to reveal the header strip */
   left: 0;
   width: 100%;
   /* Takes standard remaining visual screen space calculation rules */
@@ -602,5 +612,6 @@
 .mobileMenuBody {
   flex: 1;
   position: relative;
-  overflow-y: auto; /* Contains inner layout scrolling limits inside the drawer viewport bounds */
+  overflow-y: auto;
+  /* Contains inner layout scrolling limits inside the drawer viewport bounds */
 }

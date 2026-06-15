@@ -147,7 +147,7 @@ const Header = () => {
   };
 
   return (
-    <section className={headerStyles.headerSection}>
+    <section className={`${headerStyles.headerSection} fixed-top`}>
       {/* Top Announcement Bar */}
       <div className={headerStyles.topbarContainer}>
         <span>{headerData?.announcementBar}</span>
