@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_blocks_benefits_sections",
+  "info": {
+    "displayName": "Benefits Section"
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "benefitsText": {
+      "type": "blocks"
+    },
+    "howToUse": {
+      "type": "blocks"
+    },
+    "ingredients": {
+      "type": "blocks"
+    }
+  },
+  "config": {}
+}

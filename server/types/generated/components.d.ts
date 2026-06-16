@@ -1,5 +1,18 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface BlocksBenefitsSection extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_benefits_sections';
+  info: {
+    displayName: 'Benefits Section';
+  };
+  attributes: {
+    benefitsText: Schema.Attribute.Blocks;
+    howToUse: Schema.Attribute.Blocks;
+    image: Schema.Attribute.Media<'images'>;
+    ingredients: Schema.Attribute.Blocks;
+  };
+}
+
 export interface BlocksHeroSection extends Struct.ComponentSchema {
   collectionName: 'components_blocks_hero_sections';
   info: {
@@ -99,6 +112,32 @@ export interface BlocksPromoModal extends Struct.ComponentSchema {
     inputPlaceholder: Schema.Attribute.String;
     isActive: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
     title: Schema.Attribute.String;
+  };
+}
+
+export interface BlocksReviewsSection extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_reviews_sections';
+  info: {
+    displayName: 'Reviews Section';
+  };
+  attributes: {
+    comment: Schema.Attribute.Text;
+    dateText: Schema.Attribute.Date;
+    rating: Schema.Attribute.Integer;
+    reviewerName: Schema.Attribute.String;
+    reviewTitle: Schema.Attribute.String;
+  };
+}
+
+export interface BlocksRoutineWidget extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_routine_widgets';
+  info: {
+    displayName: 'Routine Widget';
+  };
+  attributes: {
+    icon: Schema.Attribute.Media<'images'>;
+    label: Schema.Attribute.String;
+    stepNumber: Schema.Attribute.Integer;
   };
 }
 
@@ -240,6 +279,7 @@ export interface MenuNavMegamenu extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
+      'blocks.benefits-section': BlocksBenefitsSection;
       'blocks.hero-section': BlocksHeroSection;
       'blocks.image-with-text': BlocksImageWithText;
       'blocks.journal-grid': BlocksJournalGrid;
@@ -247,6 +287,8 @@ declare module '@strapi/strapi' {
       'blocks.nav-column': BlocksNavColumn;
       'blocks.product-carousel': BlocksProductCarousel;
       'blocks.promo-modal': BlocksPromoModal;
+      'blocks.reviews-section': BlocksReviewsSection;
+      'blocks.routine-widget': BlocksRoutineWidget;
       'blocks.text-over-image': BlocksTextOverImage;
       'blocks.text-statement': BlocksTextStatement;
       'blocks.user-voice-gallery': BlocksUserVoiceGallery;

@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_blocks_routine_widgets",
+  "info": {
+    "displayName": "Routine Widget"
+  },
+  "options": {},
+  "attributes": {
+    "stepNumber": {
+      "type": "integer"
+    },
+    "label": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    }
+  },
+  "config": {}
+}

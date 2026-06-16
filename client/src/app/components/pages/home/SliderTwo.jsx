@@ -223,7 +223,7 @@ const SliderTwo = () => {
                       </div>
                       <div className="text-center">
                         <Link
-                          href={`/shop/${product?.handle}`}
+                          href={`/shop/product/${product?.handle}`}
                           className="text-decoration-none"
                         >
                           <p className={styles.title}>{product?.title}</p>

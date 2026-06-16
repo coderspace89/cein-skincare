@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_blocks_reviews_sections",
+  "info": {
+    "displayName": "Reviews Section"
+  },
+  "options": {},
+  "attributes": {
+    "reviewerName": {
+      "type": "string"
+    },
+    "rating": {
+      "type": "integer"
+    },
+    "dateText": {
+      "type": "date"
+    },
+    "reviewTitle": {
+      "type": "string"
+    },
+    "comment": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}

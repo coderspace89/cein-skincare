@@ -605,6 +605,73 @@ export interface ApiHomePageHomePage extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiProductDetailsPageProductDetailsPage
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'product_details_pages';
+  info: {
+    displayName: 'Product Details Page';
+    pluralName: 'product-details-pages';
+    singularName: 'product-details-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    benefitsSection: Schema.Attribute.Component<
+      'blocks.benefits-section',
+      false
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::product-details-page.product-details-page'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    reviews: Schema.Attribute.Component<'blocks.reviews-section', true> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    routineWidget: Schema.Attribute.Component<'blocks.routine-widget', true> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    shopifyHandle: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiProductListingPageProductListingPage
   extends Struct.CollectionTypeSchema {
   collectionName: 'product_listing_pages';
@@ -1263,6 +1330,7 @@ declare module '@strapi/strapi' {
       'api::blog-post.blog-post': ApiBlogPostBlogPost;
       'api::global.global': ApiGlobalGlobal;
       'api::home-page.home-page': ApiHomePageHomePage;
+      'api::product-details-page.product-details-page': ApiProductDetailsPageProductDetailsPage;
       'api::product-listing-page.product-listing-page': ApiProductListingPageProductListingPage;
       'api::store.store': ApiStoreStore;
       'plugin::content-releases.release': PluginContentReleasesRelease;

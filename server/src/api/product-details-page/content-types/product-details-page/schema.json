@@ -1,0 +1,67 @@
+{
+  "kind": "collectionType",
+  "collectionName": "product_details_pages",
+  "info": {
+    "singularName": "product-details-page",
+    "pluralName": "product-details-pages",
+    "displayName": "Product Details Page"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "shopifyHandle": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "required": true,
+      "unique": true
+    },
+    "routineWidget": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "blocks.routine-widget",
+      "repeatable": true
+    },
+    "benefitsSection": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "blocks.benefits-section",
+      "repeatable": false
+    },
+    "reviews": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "blocks.reviews-section",
+      "repeatable": true
+    }
+  }
+}
