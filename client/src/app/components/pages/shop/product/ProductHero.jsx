@@ -177,20 +177,21 @@ const ProductHero = ({ slug }) => {
                   (() => {
                     // 1. Helper function to extract and join the labels from a specific metafield key
                     const getLabelsByKey = (keyName) => {
+                      // Fix: Added optional chaining to meta?.key to handle null entries safely
                       const metafield = shopifyData?.categoryMetafields?.find(
-                        (meta) => meta.key === keyName,
+                        (meta) => meta?.key === keyName,
                       );
                       if (!metafield?.references?.nodes) return null;
 
                       return metafield.references.nodes
                         .map((node) => {
-                          // 1. Look for a localized "label" field inside the metaobject reference fields array
-                          const localizedLabel = node.fields?.find(
-                            (f) => f.key === "label" || f.key === "name",
+                          // Safely look for the localized "label" or "name" field
+                          const localizedLabel = node?.fields?.find(
+                            (f) => f?.key === "label" || f?.key === "name",
                           )?.value;
 
-                          // 2. Fall back to the node's top-level handle if field maps are empty
-                          return localizedLabel || node.handle;
+                          // Fall back to the node's handle if fields are missing
+                          return localizedLabel || node?.handle;
                         })
                         .filter(Boolean)
                         .join(", ");
