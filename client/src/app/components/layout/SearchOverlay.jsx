@@ -263,7 +263,7 @@ export default function SearchOverlay({ isOpen, onClose }) {
                           >
                             {product.title}
                           </h4>
-                          <div
+                          {/* <div
                             className="font-sans text-secondary mb-4 font-weight-light"
                             style={{
                               fontSize: "12px",
@@ -273,7 +273,58 @@ export default function SearchOverlay({ isOpen, onClose }) {
                             dangerouslySetInnerHTML={{
                               __html: product.desc,
                             }}
-                          />
+                          /> */}
+                          {product.desc &&
+                            (() => {
+                              // 1. Add a newline right before every opening <p> tag to guarantee string separation
+                              let formattedHtml = product.desc.replace(
+                                /<p>/g,
+                                "\n<p>",
+                              );
+
+                              // 2. Strip out all other HTML tags safely
+                              const cleanText = formattedHtml.replace(
+                                /<[^>]*>/g,
+                                "",
+                              );
+
+                              // 3. Break the rows apart, trim empty spaces, and drop empty lines
+                              const lines = cleanText
+                                .split("\n")
+                                .map((line) => line.trim())
+                                .filter(Boolean);
+
+                              // Now lines[0] will be "A Vitamin C-rich layering serum" and lines[1] will be "60 ml"
+                              const subtitle = lines[0];
+                              const size = lines[1];
+
+                              return (
+                                <div className="my-2 flex flex-col gap-0.5 text-center">
+                                  {subtitle && (
+                                    <p
+                                      style={{
+                                        fontSize: "12px",
+                                        minHeight: "36px",
+                                        whiteSpace: "pre-line",
+                                      }}
+                                    >
+                                      {subtitle}
+                                    </p>
+                                  )}
+                                  {size && (
+                                    <p
+                                      style={{
+                                        fontSize: "12px",
+                                        minHeight: "36px",
+                                        whiteSpace: "pre-line",
+                                      }}
+                                    >
+                                      {size}
+                                    </p>
+                                  )}
+                                </div>
+                              );
+                            })()}
                           <p
                             className="font-sans text-dark m-0 font-weight-medium"
                             style={{ fontSize: "13px" }}

@@ -250,12 +250,49 @@ const ProductListings = ({ slug }) => {
                         className="text-decoration-none"
                       >
                         <p className={styles.title}>{product?.title}</p>
-                        <div
+                        {/* <div
                           className={styles.description}
                           dangerouslySetInnerHTML={{
                             __html: product.desc,
                           }}
-                        />
+                        /> */}
+                        {product.desc &&
+                          (() => {
+                            // 1. Add a newline right before every opening <p> tag to guarantee string separation
+                            let formattedHtml = product.desc.replace(
+                              /<p>/g,
+                              "\n<p>",
+                            );
+
+                            // 2. Strip out all other HTML tags safely
+                            const cleanText = formattedHtml.replace(
+                              /<[^>]*>/g,
+                              "",
+                            );
+
+                            // 3. Break the rows apart, trim empty spaces, and drop empty lines
+                            const lines = cleanText
+                              .split("\n")
+                              .map((line) => line.trim())
+                              .filter(Boolean);
+
+                            // Now lines[0] will be "A Vitamin C-rich layering serum" and lines[1] will be "60 ml"
+                            const subtitle = lines[0];
+                            const size = lines[1];
+
+                            return (
+                              <div className="my-2 flex flex-col gap-0.5 text-center">
+                                {subtitle && (
+                                  <p className={styles.description}>
+                                    {subtitle}
+                                  </p>
+                                )}
+                                {size && (
+                                  <p className={styles.description}>{size}</p>
+                                )}
+                              </div>
+                            );
+                          })()}
                         <p className={styles.price}>{product?.price}</p>
                       </Link>
                       <div className={styles.sliderBtnWrapper}>

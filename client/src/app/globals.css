@@ -32,7 +32,7 @@ body {
   flex-direction: column;
   color: var(--foreground);
   background: var(--background);
-  font-family: var(--font-arimo), sans-serif;
+  font-family: var(--font-arimo), sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -43,7 +43,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-zapf), sans-serif;
+  font-family: var(--font-zapf), sans-serif !important;
 }
 
 * {
