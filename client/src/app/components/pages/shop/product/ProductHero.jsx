@@ -49,7 +49,7 @@ const ProductHero = ({ slug }) => {
 
   if (!shopifyData) {
     return (
-      <div className="w-full text-center py-20 text-gray-500">
+      <div className="w-100 text-center py-5 text-gray">
         Loading product details...
       </div>
     );

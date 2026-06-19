@@ -1,0 +1,73 @@
+.container {
+  padding: 100px 0;
+  background-color: var(--storeInfoBlock);
+}
+
+.stepsImage {
+  vertical-align: middle;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.stepsNumberWrapper {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: var(--foreground);
+  color: var(--background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.labelText {
+  color: var(--linkText);
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.subtitle {
+  color: var(--linkText);
+  font-size: 15px;
+  font-weight: 400;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.sectionTitle {
+  color: var(--foreground);
+  font-weight: 500;
+}
+
+/* Container flex rules */
+.stepsBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 1. Target every step wrapper div that comes immediately after another step wrapper div */
+.stepsBox > div + div {
+  position: relative;
+}
+
+/* 2. Inject the dynamic "+" pseudo-element between them */
+.stepsBox > div + div::before {
+  content: "+";
+  position: absolute;
+  left: -28px; /* Halfway point between your gap-lg-5 (48px) spacing */
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: var(--linkText); /* Matches your typography variables */
+  font-weight: 300;
+  pointer-events: none;
+}
+
+/* Responsive adjustment for mobile screen breakpoints */
+@media (max-width: 991px) {
+  .stepsBox > div + div::before {
+    left: -12px; /* Shifts closer to fit gap-3 spacing on mobile */
+    font-size: 16px;
+  }
+}

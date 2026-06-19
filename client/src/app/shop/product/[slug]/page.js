@@ -1,5 +1,8 @@
 import React from "react";
 import ProductHero from "@/app/components/pages/shop/product/ProductHero";
+import RoutineBlock from "@/app/components/pages/shop/product/RoutineBlock";
+import BenefitsBlock from "@/app/components/pages/shop/product/BenefitsBlock";
+import ReviewsBlock from "@/app/components/pages/shop/product/ReviewsBlock";
 
 const page = async ({ params }) => {
   const { slug } = await params;
@@ -8,6 +11,9 @@ const page = async ({ params }) => {
   return (
     <div>
       <ProductHero slug={slug} />
+      <RoutineBlock slug={slug} />
+      <BenefitsBlock slug={slug} />
+      <ReviewsBlock slug={slug} />
     </div>
   );
 };
