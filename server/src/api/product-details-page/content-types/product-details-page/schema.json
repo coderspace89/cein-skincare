@@ -78,6 +78,16 @@
           "localized": true
         }
       }
+    },
+    "similarProducts": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "blocks.product-carousel",
+      "repeatable": false
     }
   }
 }

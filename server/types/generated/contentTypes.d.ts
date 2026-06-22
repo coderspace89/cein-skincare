@@ -666,6 +666,15 @@ export interface ApiProductDetailsPageProductDetailsPage
           localized: true;
         };
       }>;
+    similarProducts: Schema.Attribute.Component<
+      'blocks.product-carousel',
+      false
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     subtitle: Schema.Attribute.String &
       Schema.Attribute.SetPluginOptions<{
         i18n: {

@@ -189,7 +189,7 @@ export default function SearchOverlay({ isOpen, onClose }) {
                     >
                       {/* Route to Shopify dynamic store handle link path instead */}
                       <Link
-                        href={`/shop/${product.handle}`}
+                        href={`/shop/product/${product.handle}`}
                         onClick={onClose}
                         className="w-100 text-decoration-none text-dark d-flex flex-column align-items-center"
                       >

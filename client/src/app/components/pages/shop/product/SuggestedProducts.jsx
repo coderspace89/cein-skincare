@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import styles from "./SliderTwo.module.css";
+import styles from "./SuggestedProducts.module.css";
 import qs from "qs";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -15,7 +15,7 @@ import Col from "react-bootstrap/Col";
 import Image from "next/image";
 import Link from "next/link";
 
-const SliderTwo = () => {
+const SuggestedProducts = ({ slug }) => {
   const { locale } = useLocale();
   const [sliderData, setSliderData] = useState(null);
   const [shopifyProducts, setShopifyProducts] = useState([]);
@@ -24,15 +24,14 @@ const SliderTwo = () => {
   const query = React.useMemo(() => {
     return qs.stringify(
       {
+        filters: {
+          shopifyHandle: { $eq: slug },
+        },
         locale: locale,
         populate: {
-          pageBlocks: {
-            on: {
-              "blocks.product-carousel": {
-                populate: {
-                  productHandles: true,
-                },
-              },
+          similarProducts: {
+            populate: {
+              productHandles: true,
             },
           },
         },
@@ -45,17 +44,10 @@ const SliderTwo = () => {
   useEffect(() => {
     const fetchBlockData = async () => {
       try {
-        const response = await fetch(`/api/home-page?${query}`);
+        const response = await fetch(`/api/product-details-pages?${query}`);
         const data = await response.json();
-
-        const carousels =
-          data?.data?.pageBlocks?.filter(
-            (block) => block.__component === "blocks.product-carousel",
-          ) || [];
-
-        // Grab the SECOND carousel block
-        const carouselBlock = carousels[1];
-        setSliderData(carouselBlock);
+        console.log(data?.data?.[0]?.similarProducts);
+        setSliderData(data?.data?.[0]?.similarProducts);
       } catch (error) {
         console.error("Error fetching block data:", error);
       }
@@ -77,9 +69,11 @@ const SliderTwo = () => {
     let isMounted = true;
 
     // 1. CRITICAL FIX: Extract the raw handle strings out of the nested Strapi array structure
-    const flatHandlesArray = sliderData.productHandles
+    const flatHandlesArray = sliderData?.productHandles
       .map((item) => (typeof item === "string" ? item : item?.handle))
       .filter(Boolean); // Cleans out any empty rows
+
+    console.log(flatHandlesArray);
 
     // 2. Fetch from your own internal Next.js server route
     fetch("/api/products", {
@@ -98,9 +92,9 @@ const SliderTwo = () => {
       })
       .then((products) => {
         if (isMounted) {
-          // 👈 Slice the array starting at index 5 to get items 6 through 10
-          // const remainingProducts = products.slice(4);
-          setShopifyProducts(products);
+          // 👈 Slice the array to save ONLY the first 5 items
+          const firstFiveProducts = products.slice(0, 5);
+          setShopifyProducts(firstFiveProducts);
         }
       })
       .catch((err) => {
@@ -317,4 +311,4 @@ const SliderTwo = () => {
   );
 };
 
-export default SliderTwo;
+export default SuggestedProducts;
