@@ -8,7 +8,8 @@ import Image from "next/image";
 import { Row, Col, Spinner, Container } from "react-bootstrap";
 import { getStrapiMedia } from "@/lib/utils";
 import Link from "next/link";
-import { IoHeartOutline } from "react-icons/io5";
+import { IoHeartOutline, IoHeart } from "react-icons/io5";
+import { useFavorites } from "@/context/FavoritesContext";
 
 const ProductListings = ({ slug }) => {
   const { locale } = useLocale();
@@ -16,6 +17,7 @@ const ProductListings = ({ slug }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const { toggleFavorite, isFavorite } = useFavorites();
 
   // 1. Memoize or safely structure the query object parameter blocks
   const queryParams = {
@@ -218,9 +220,19 @@ const ProductListings = ({ slug }) => {
                         />
                       )}
                       <div className="position-absolute bottom-0 end-0 translate-middle">
-                        <span>
-                          <IoHeartOutline color="#333333" size={24} />
-                        </span>
+                        <button
+                          className={styles.favoriteBtn}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            toggleFavorite(product?.id);
+                          }}
+                        >
+                          {isFavorite(product?.id) ? (
+                            <IoHeart color="#C30000" size={24} />
+                          ) : (
+                            <IoHeartOutline color="#333333" size={24} />
+                          )}
+                        </button>
                       </div>
                       <div className="position-absolute top-0 end-0 pe-2">
                         {product?.tags?.map((tag, idx) => {

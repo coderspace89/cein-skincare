@@ -7,6 +7,7 @@ import { LocaleProvider } from "@/context/LocaleContext";
 import Footer from "@/app/components/layout/Footer";
 import GlobalLoader from "@/app/components/common/GlobalLoader";
 import PromoModal from "@/app/components/common/PromoModal";
+import { FavoritesProvider } from "@/context/FavoritesContext";
 
 const arimo = Arimo({
   variable: "--font-arimo",
@@ -34,11 +35,13 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${arimo.variable} ${myFont.variable}`}>
       <body>
         <LocaleProvider>
-          <GlobalLoader />
-          <Header />
-          <PromoModal />
-          {children}
-          <Footer />
+          <FavoritesProvider>
+            <GlobalLoader />
+            <Header />
+            <PromoModal />
+            {children}
+            <Footer />
+          </FavoritesProvider>
         </LocaleProvider>
       </body>
     </html>

@@ -8,17 +8,19 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { LiaArrowRightSolid } from "react-icons/lia";
 import { useLocale } from "@/context/LocaleContext";
-import { IoHeartOutline } from "react-icons/io5";
+import { IoHeartOutline, IoHeart } from "react-icons/io5";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Image from "next/image";
 import Link from "next/link";
+import { useFavorites } from "@/context/FavoritesContext";
 
 const SliderOne = () => {
   const { locale } = useLocale();
   const [sliderData, setSliderData] = useState(null);
   const [shopifyProducts, setShopifyProducts] = useState([]);
+  const { toggleFavorite, isFavorite } = useFavorites();
 
   // Memoize query string so it doesn't calculate on random component re-renders
   const query = React.useMemo(() => {
@@ -99,8 +101,8 @@ const SliderOne = () => {
       .then((products) => {
         if (isMounted) {
           // 👈 Slice the array to save ONLY the first 5 items
-          const firstFiveProducts = products.slice(0, 5);
-          setShopifyProducts(firstFiveProducts);
+          // const firstFiveProducts = products.slice(0, 5);
+          setShopifyProducts(products);
         }
       })
       .catch((err) => {
@@ -196,9 +198,19 @@ const SliderOne = () => {
                           />
                         )}
                         <div className="position-absolute bottom-0 end-0 translate-middle">
-                          <span>
-                            <IoHeartOutline color="#333333" size={24} />
-                          </span>
+                          <button
+                            className={styles.favoriteBtn}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              toggleFavorite(product?.id);
+                            }}
+                          >
+                            {isFavorite(product?.id) ? (
+                              <IoHeart color="#C30000" size={24} />
+                            ) : (
+                              <IoHeartOutline color="#333333" size={24} />
+                            )}
+                          </button>
                         </div>
                         <div className="position-absolute top-0 end-0 pe-2">
                           {product?.tags?.map((tag, idx) => {

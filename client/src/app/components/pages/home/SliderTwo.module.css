@@ -102,6 +102,11 @@
   text-transform: capitalize;
 }
 
+.favoriteBtn {
+  background-color: transparent;
+  border: 0;
+}
+
 @media (max-width: 600px) {
   .sectionDescription {
     width: 100%;

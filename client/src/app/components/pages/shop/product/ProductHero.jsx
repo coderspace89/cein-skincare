@@ -11,12 +11,14 @@ import Col from "react-bootstrap/Col";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { IoHeartOutline } from "react-icons/io5";
+import { IoHeartOutline, IoHeart } from "react-icons/io5";
+import { useFavorites } from "@/context/FavoritesContext";
 
 const ProductHero = ({ slug }) => {
   const { locale } = useLocale();
   const currentLocale = locale.toLowerCase();
   const [shopifyData, setShopifyData] = useState(null);
+  const { toggleFavorite, isFavorite } = useFavorites();
 
   // 1. Get the country code from your locale string if it includes a region (e.g., "en-us" -> "us")
   // 2. Fall back to a smart mapping if it's just a language code (e.g., "fr" -> "fr")
@@ -157,13 +159,23 @@ const ProductHero = ({ slug }) => {
                 </button>
               </div>
               <div className={styles.saveBtnWrapper}>
-                <button className={styles.saveBtn}>
+                <button
+                  className={styles.saveBtn}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    toggleFavorite(shopifyData?.id);
+                  }}
+                >
                   <span>
-                    <IoHeartOutline
-                      color="#333333"
-                      size={24}
-                      className="me-2"
-                    />
+                    {isFavorite(shopifyData?.id) ? (
+                      <IoHeart color="#C30000" size={24} className="me-2" />
+                    ) : (
+                      <IoHeartOutline
+                        color="#333333"
+                        size={24}
+                        className="me-2"
+                      />
+                    )}
                     {currentLocale === "es"
                       ? "Guardar en el armario"
                       : currentLocale === "fr"
