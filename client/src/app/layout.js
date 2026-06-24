@@ -8,6 +8,7 @@ import Footer from "@/app/components/layout/Footer";
 import GlobalLoader from "@/app/components/common/GlobalLoader";
 import PromoModal from "@/app/components/common/PromoModal";
 import { FavoritesProvider } from "@/context/FavoritesContext";
+import { CartProvider } from "@/context/CartContext";
 
 const arimo = Arimo({
   variable: "--font-arimo",
@@ -36,11 +37,13 @@ export default function RootLayout({ children }) {
       <body>
         <LocaleProvider>
           <FavoritesProvider>
-            <GlobalLoader />
-            <Header />
-            <PromoModal />
-            {children}
-            <Footer />
+            <CartProvider>
+              <GlobalLoader />
+              <Header />
+              <PromoModal />
+              {children}
+              <Footer />
+            </CartProvider>
           </FavoritesProvider>
         </LocaleProvider>
       </body>

@@ -22,6 +22,7 @@ const GET_SINGLE_LOCALIZED_PRODUCT = `
       variants(first: 1) {
         edges {
           node {
+            id # 1. 💡 CRITICAL: Fetch the variant's Global ID (gid://shopify/ProductVariant/...)
             price {
               amount
               currencyCode
@@ -87,17 +88,19 @@ export async function getShopifyProductsByHandles(handlesArray, locale = "en") {
       }
 
       const node = response.data.product;
+      const firstVariantNode = node.variants?.edges[0]?.node || null; // Helper reference
 
       return {
         id: node.id,
+        variantId: firstVariantNode?.id || null, // 2. 💡 EXPOSE: Pass this cleanly to your frontend slider mappings
         title: node.title,
         handle: node.handle,
         description: node.descriptionHtml,
         tags: node.tags || [],
         imageUrl: node.images?.edges[0]?.node?.url || null,
         imageAlt: node.images?.edges[0]?.node?.altText || node.title,
-        price: node.variants?.edges[0]?.node?.price?.amount || "0",
-        currency: node.variants?.edges[0]?.node?.price?.currencyCode || "USD",
+        price: firstVariantNode?.price?.amount || "0",
+        currency: firstVariantNode?.price?.currencyCode || "USD",
       };
     });
 
