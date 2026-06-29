@@ -11,7 +11,7 @@ import Link from "next/link";
 
 const CartPage = () => {
   const [pageData, setPageData] = useState(null);
-  const [localizedTitles, setLocalizedTitles] = useState({}); // 💡 Localized products mapping state
+  const [localizedTitles, setLocalizedTitles] = useState({}); // Localized products mapping state
 
   const { cartItems, updateQuantity, subTotal, removeFromCart } = useCart();
   const { locale } = useLocale();
@@ -47,6 +47,7 @@ const CartPage = () => {
         const response = await fetch(`/api/cart-page?${queryString}`);
         const payload = await response.json();
         const dataNode = payload?.data;
+        console.log(dataNode);
 
         if (dataNode) {
           setPageData(dataNode);
@@ -64,32 +65,42 @@ const CartPage = () => {
     fetchCartLabels();
   }, [locale]);
 
-  // 💡 FETCH FRESH TRANSLATED PRODUCT DATA FROM SHOPIFY WHEN LOCALE CHANGES
+  // FETCH FRESH TRANSLATED PRODUCT DATA FROM SHOPIFY WHEN LOCALE CHANGES
   useEffect(() => {
-    const fetchLocalizedProductTitles = async () => {
-      if (cartItems.length === 0) return;
+    console.log(
+      "1. UseEffect mounted. Cart items count:",
+      cartItems?.length,
+      "Locale:",
+      locale,
+    );
 
-      const productHandles = cartItems
-        .map((item) => item.handle)
+    const fetchLocalizedProductTitles = async () => {
+      if (!cartItems || cartItems.length === 0) return;
+
+      // Map by variantId (or item.id) instead of handle
+      const variantIds = cartItems
+        .map((item) => item.variantId || item.id)
         .filter(Boolean);
-      if (productHandles.length === 0) return;
+      console.log("3. Extracted Variant IDs:", variantIds);
+
+      if (variantIds.length === 0) return;
 
       try {
-        // Utilizing your handle loop endpoint to fetch fresh titles corresponding to current locale
         const response = await fetch("/api/products", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ productHandles, locale: currentLocale }),
+          body: JSON.stringify({ variantIds, locale }),
         });
 
         const freshProducts = await response.json();
 
-        // Map variantId keys to their newly localized variants structures
         const translationMap = {};
         freshProducts.forEach((prod) => {
           if (prod.variantId) {
             translationMap[prod.variantId] = {
               title: prod.title,
+              description: prod.description,
+              price: prod.price, // 💡 FIXED: Storing the fresh localized price from Shopify into state
               currency: prod.currency || "USD",
             };
           }
@@ -102,54 +113,13 @@ const CartPage = () => {
     };
 
     fetchLocalizedProductTitles();
-  }, [locale, cartItems.length]);
+  }, [locale, JSON.stringify(cartItems)]);
 
   if (loadingLabels) {
     return <Spinner animation="border" variant="dark" />;
   }
 
-  // Translation configuration objects
-  const cartDict = {
-    en: {
-      title: "Cart",
-      subtitle:
-        "Purchase one more item of the sale products and receive free shipping! *Automatically applied on the next page",
-      headerItem: "CART",
-      headerPrice: "PRICE",
-      headerQty: "QUANTITY",
-      headerSub: "SUB-TOTAL",
-      total: "Total",
-      checkout: "Checkout",
-      empty: "Your cart is empty",
-    },
-    es: {
-      title: "Carrito",
-      subtitle:
-        "¡Compra un artículo más de los productos en oferta y recibe envío gratis! *Aplicado automáticamente en la siguiente página",
-      headerItem: "PRODUCTO",
-      headerPrice: "PRECIO",
-      headerQty: "CANTIDAD",
-      headerSub: "SUBTOTAL",
-      total: "Total",
-      checkout: "Proceder al Pago",
-      empty: "Tu carrito está vacío",
-    },
-    fr: {
-      title: "Panier",
-      subtitle:
-        "Achetez un article de plus et profitez de la livraison gratuite ! *Appliqué automatiquement à l'étape suivante",
-      headerItem: "ARTICLE",
-      headerPrice: "PRIX",
-      headerQty: "QUANTITÉ",
-      headerSub: "SOUS-TOTAL",
-      total: "Total",
-      checkout: "Passer la commande",
-      empty: "Votre panier est vide",
-    },
-  };
-
-  const t = cartDict[currentLocale] || cartDict.en;
-
+  // checkout function
   const handleCheckout = async () => {
     if (cartItems.length === 0) return;
     setRedirecting(true);
@@ -176,8 +146,14 @@ const CartPage = () => {
         className="text-center"
         style={{ marginTop: "160px", minHeight: "50vh" }}
       >
-        <h3>{t.title}</h3>
-        <p className="text-muted mt-4">{t.empty}</p>
+        <h3>{pageData?.title}</h3>
+        <p className="text-muted mt-4">
+          {currentLocale === "es"
+            ? "Tu carrito está vacío"
+            : currentLocale === "fr"
+              ? "Votre panier est vide"
+              : "Your cart is empty"}
+        </p>
         <Link
           href="/shop/shop-all"
           className="btn btn-outline-dark mt-2 text-capitalize"
@@ -193,35 +169,51 @@ const CartPage = () => {
     );
   }
 
+  // Recalculate your cart subtotal using the live localized values
+  const localizedSubTotal = cartItems.reduce((acc, item) => {
+    const localizedProduct = localizedTitles[item.variantId];
+    const rawPriceString =
+      localizedProduct?.price !== undefined
+        ? String(localizedProduct.price)
+        : item.price;
+    const itemPriceNumeric =
+      parseFloat(rawPriceString.replace(/[^0-9.]/g, "")) || 0;
+    return acc + itemPriceNumeric * item.quantity;
+  }, 0);
+
   // Determine uniform currency target from active inventory array items
   const activeCurrencyCode =
     localizedTitles[cartItems[0]?.variantId]?.currency || "USD";
 
   return (
-    <section>
-      <div style={{ marginTop: "140px", marginBottom: "80px" }}>
+    <section className={styles.container}>
+      <div>
         <Container>
           {/* Cart Headers */}
-          <div className="text-center mb-5">
-            <h2 className={styles.cartMainTitle}>{t.title}</h2>
-            <p className={styles.cartPromoSubtitle}>{t.subtitle}</p>
+          <div className="text-center my-5">
+            <h2 className={styles.cartMainTitle}>{pageData?.title}</h2>
+            <p className={styles.cartDescription}>{pageData?.description}</p>
           </div>
 
           {/* Table Headings */}
           <Row
-            className={`${styles.tableHeaderLine} d-none d-md-flex align-items-center mb-3 text-muted`}
+            className={`${styles.tableHeaderLine} d-none d-md-flex align-items-center mb-3 text-muted border-bottom border-light-subtle`}
           >
             <Col md={5}>
-              <small>{t.headerItem}</small>
+              <small className="text-uppercase">{pageData?.cartLabel}</small>
             </Col>
             <Col md={2} className="text-center">
-              <small>{t.headerPrice}</small>
+              <small className="text-uppercase">{pageData?.priceLabel}</small>
             </Col>
             <Col md={2} className="text-center">
-              <small>{t.headerQty}</small>
+              <small className="text-uppercase">
+                {pageData?.quantityLabel}
+              </small>
             </Col>
             <Col md={3} className="text-end">
-              <small>{t.headerSub}</small>
+              <small className="text-uppercase">
+                {pageData?.subtotalLabel}
+              </small>
             </Col>
           </Row>
 
@@ -232,7 +224,6 @@ const CartPage = () => {
             const targetCurrency =
               localizedTitles[item.variantId]?.currency || "USD";
 
-            // 💡 Dynamic translation fallbacks
             const displayTitle =
               localizedTitles[item.variantId]?.title || item.title;
 
@@ -250,8 +241,8 @@ const CartPage = () => {
 
             return (
               <Row
-                key={item.variantId}
-                className={`${styles.cartItemRow} align-items-center py-4 g-3`}
+                key={item.variantId || `cart-item-${item.id}`}
+                className={`${styles.cartItemRow} align-items-center py-4 g-3 border-bottom border-light-subtle`}
               >
                 {/* Product Info Column */}
                 <Col md={5} xs={12} className="d-flex align-items-center">
@@ -267,7 +258,7 @@ const CartPage = () => {
                     </div>
                   )}
                   <div className="ms-3">
-                    <h5 className={styles.productTitle}>{displayTitle}</h5>
+                    <p className={styles.productTitle}>{displayTitle}</p>
                     {sizeLabel && (
                       <p className={styles.productSize}>{sizeLabel}</p>
                     )}
@@ -292,7 +283,7 @@ const CartPage = () => {
                   </div>
                 </Col>
 
-                {/* Price Column - 💡 Dynamic Formatter */}
+                {/* Price Column - Dynamic Formatter */}
                 <Col md={2} xs={4} className="text-md-center text-start">
                   <span className={styles.itemMetrics}>
                     {formatCurrency(itemPriceNumeric, targetCurrency)}
@@ -325,7 +316,7 @@ const CartPage = () => {
                   </div>
                 </Col>
 
-                {/* Individual Row Subtotal - 💡 Dynamic Formatter */}
+                {/* Individual Row Subtotal - Dynamic Formatter */}
                 <Col md={3} xs={4} className="text-end">
                   <span className={styles.itemMetrics}>
                     {formatCurrency(
@@ -342,21 +333,17 @@ const CartPage = () => {
           <Row className="justify-content-end mt-5 pt-4">
             <Col lg={4} md={6} xs={12}>
               <div className="d-flex justify-content-between align-items-baseline mb-4">
-                <h4 className={styles.totalLabel}>{t.total}</h4>
-                {/* 💡 Total Block Format */}
+                <h4 className={styles.totalLabel}>{pageData?.totalLabel}</h4>
+                {/* Total Block Format */}
                 <h3 className={styles.totalAmount}>
-                  {formatCurrency(subTotal, activeCurrencyCode)}
+                  {formatCurrency(localizedSubTotal, activeCurrencyCode)}
                 </h3>
               </div>
               <p
                 className={styles.shippingNotice}
                 style={{ textAlign: "right", fontSize: "12px", color: "#777" }}
               >
-                {currentLocale === "es"
-                  ? "El costo de envío se calculará al momento de la compra"
-                  : currentLocale === "fr"
-                    ? "Les frais de port seront calculés lors de l'achat"
-                    : "Shipping Fee will be calculated at the time of purchase"}
+                {pageData?.infoText}
               </p>
               <button
                 onClick={handleCheckout}
@@ -369,7 +356,7 @@ const CartPage = () => {
                     : currentLocale === "fr"
                       ? "Traitement..."
                       : "Processing..."
-                  : t.checkout}
+                  : pageData?.btnLabel}
               </button>
             </Col>
           </Row>

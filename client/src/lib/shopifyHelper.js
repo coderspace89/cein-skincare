@@ -1,9 +1,9 @@
-// src/lib/shopifyHelper.js
+// // src/lib/shopifyHelper.js
 import { shopifyFetch } from "./shopify";
 
 // Clean, valid Shopify Storefront API query structure
 const GET_SINGLE_LOCALIZED_PRODUCT = `
-  query getProductByHandle($handle: String!, $language: LanguageCode!, $country: CountryCode!) 
+  query getProductByHandle($handle: String!, $language: LanguageCode!, $country: CountryCode!)
   @inContext(language: $language, country: $country) {
     product(handle: $handle) {
       id
@@ -111,6 +111,73 @@ export async function getShopifyProductsByHandles(handlesArray, locale = "en") {
       `Error resolving handles matching loop sequence for locale ${locale}:`,
       error,
     );
+    return [];
+  }
+}
+
+const GET_LOCALIZED_VARIANTS = `
+  query getVariants($ids: [ID!]!, $language: LanguageCode!, $country: CountryCode!) 
+  @inContext(language: $language, country: $country) {
+    nodes(ids: $ids) {
+      ... on ProductVariant {
+        id
+        price {
+          amount
+          currencyCode
+        }
+        product {
+          title
+          descriptionHtml
+        }
+      }
+    }
+  }
+`;
+
+export async function getShopifyProductsByVariants(variantIds, locale = "en") {
+  if (!variantIds || variantIds.length === 0) return [];
+
+  let languageCode = "EN";
+  let countryCode = "US";
+
+  if (locale.toLowerCase() === "es") {
+    languageCode = "ES";
+    countryCode = "ES";
+  } else if (locale.toLowerCase() === "fr") {
+    languageCode = "FR";
+    countryCode = "FR";
+  }
+
+  try {
+    const response = await shopifyFetch({
+      query: GET_LOCALIZED_VARIANTS,
+      variables: {
+        ids: variantIds,
+        language: languageCode,
+        country: countryCode,
+      },
+      locale: locale,
+    });
+
+    if (response?.errors || !response?.data?.nodes) {
+      console.error("Shopify variant resolution failed:", response?.errors);
+      return [];
+    }
+
+    return response.data.nodes
+      .map((node) => {
+        if (!node) return null;
+        return {
+          variantId: node.id,
+          title: node.product?.title,
+          description: node.product?.descriptionHtml,
+          price: node.price?.amount || "0",
+          currency: node.price?.currencyCode || "USD",
+        };
+      })
+      .filter(Boolean);
+  } catch (error) {
+    console.error("Error resolving variants:", error);
     return [];
   }
 }

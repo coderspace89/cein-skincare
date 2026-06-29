@@ -34,15 +34,19 @@ export async function POST(request) {
 
     // Map your client-side cart items to standard Shopify CartLineInput formats
     const shopifyLines = lines.map((item) => ({
-      merchandiseId: item.variantId, // Global ID for the variant (e.g., gid://shopify/ProductVariant/...)
+      merchandiseId: item.variantId,
       quantity: parseInt(item.quantity, 10) || 1,
     }));
 
-    const response = await fetch(`https://${domain}/api/2024-04/graphql.json`, {
+    // 💡 1. Updated API version to match your storefront helper configuration rules
+    const response = await fetch(`https://${domain}/api/2024-07/graphql.json`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "X-Shopify-Storefront-Access-Token": storefrontAccessToken,
+        // 💡 2. CRITICAL HEADERS: Forces the returned checkout link to use the target market's currency (EUR) and language
+        "Accept-Language": locale.toLowerCase(),
+        "X-Shopify-Storefront-Country": activeSettings.country,
       },
       body: JSON.stringify({
         query: cartCreateMutation,

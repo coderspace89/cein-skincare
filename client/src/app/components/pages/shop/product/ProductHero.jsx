@@ -5,6 +5,7 @@ import styles from "./ProductHero.module.css";
 import Image from "next/image";
 import { getStrapiMedia } from "@/lib/utils";
 import { useLocale } from "@/context/LocaleContext";
+import { useCart } from "@/context/CartContext";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -18,21 +19,19 @@ const ProductHero = ({ slug }) => {
   const { locale } = useLocale();
   const currentLocale = locale.toLowerCase();
   const [shopifyData, setShopifyData] = useState(null);
+  const [selectedVariant, setSelectedVariant] = useState(null);
   const { toggleFavorite, isFavorite } = useFavorites();
+  const { addToCart } = useCart();
 
-  // 1. Get the country code from your locale string if it includes a region (e.g., "en-us" -> "us")
-  // 2. Fall back to a smart mapping if it's just a language code (e.g., "fr" -> "fr")
-  let countryCode = "us"; // Default fallback
+  let countryCode = "us";
 
   if (currentLocale.includes("-")) {
     countryCode = currentLocale.split("-")[1];
   } else {
-    // Map solitary language codes to their primary market country codes
     const languageToCountryMap = {
       en: "us",
       fr: "fr",
       es: "es",
-      // Add other languages your storefront supports here
     };
     countryCode = languageToCountryMap[currentLocale] || "us";
   }
@@ -43,11 +42,33 @@ const ProductHero = ({ slug }) => {
         `/api/product-details?handle=${slug}&language=${currentLocale}&country=${countryCode}`,
       );
       const productData = await res.json();
-      console.log(productData);
       setShopifyData(productData);
+
+      // Automatically auto-select the standard target product variant node
+      if (productData?.variants?.nodes?.length > 0) {
+        setSelectedVariant(productData.variants.nodes[0]);
+      }
     };
     fetchProduct();
-  }, [currentLocale]);
+  }, [currentLocale, slug, countryCode]);
+
+  // Click Handler for the main button
+  const handleAddToCartClick = () => {
+    if (!shopifyData || !selectedVariant) return;
+
+    const cartPayload = {
+      id: selectedVariant.id,
+      variantId: selectedVariant.id,
+      handle: slug,
+      title: shopifyData.title,
+      price: `${selectedVariant.price?.amount || 0} ${selectedVariant.price?.currencyCode || "USD"}`,
+      img: shopifyData?.images?.nodes?.[0]?.url || "",
+      desc: shopifyData?.descriptionHtml || "",
+      quantity: 1,
+    };
+
+    addToCart(cartPayload);
+  };
 
   if (!shopifyData) {
     return (
@@ -67,6 +88,9 @@ const ProductHero = ({ slug }) => {
     initialSlide: 1,
   };
 
+  // Safe fallback price values if the selected variant state hasn't resolved yet
+  const displayPriceItem = selectedVariant || shopifyData?.variants?.nodes?.[0];
+
   return (
     <section className={styles.container}>
       <Container fluid className="p-0">
@@ -78,7 +102,7 @@ const ProductHero = ({ slug }) => {
                   (img, idx) =>
                     img?.url && (
                       <Image
-                        key={idx}
+                        key={`hero-img-${idx}`}
                         src={
                           img.url.startsWith("http")
                             ? img.url
@@ -109,28 +133,24 @@ const ProductHero = ({ slug }) => {
 
               {shopifyData?.descriptionHtml &&
                 (() => {
-                  // 1. Add a newline right before every opening <p> tag to guarantee string separation
                   let formattedHtml = shopifyData.descriptionHtml.replace(
                     /<p>/g,
                     "\n<p>",
                   );
-
-                  // 2. Strip out all other HTML tags safely
                   const cleanText = formattedHtml.replace(/<[^>]*>/g, "");
-
-                  // 3. Break the rows apart, trim empty spaces, and drop empty lines
                   const lines = cleanText
                     .split("\n")
                     .map((line) => line.trim())
                     .filter(Boolean);
-
-                  // Slice array from index 2 onwards to grab the remaining long description paragraphs
                   const detailedParagraphs = lines.slice(2);
 
                   return (
                     <div>
                       {detailedParagraphs.map((para, i) => (
-                        <p key={i} className={styles.description}>
+                        <p
+                          key={`desc-para-${i}`}
+                          className={styles.description}
+                        >
                           {para}
                         </p>
                       ))}
@@ -138,19 +158,23 @@ const ProductHero = ({ slug }) => {
                   );
                 })()}
 
-              <div>
-                {/* Fix: changed .node to .nodes and targeted item.price.amount */}
-                {shopifyData?.variants?.nodes?.map((item) => (
-                  <div key={item.id} className="font-medium mt-4">
-                    <h3>
-                      {Math.round(item.price?.amount)}{" "}
-                      {item.price?.currencyCode}
-                    </h3>
-                  </div>
-                ))}
-              </div>
+              {/* Display plain static price element cleanly (No map loops) */}
+              {displayPriceItem && (
+                <div className="font-medium mt-4">
+                  <h3>
+                    {Math.round(displayPriceItem.price?.amount)}{" "}
+                    {displayPriceItem.price?.currencyCode}
+                  </h3>
+                </div>
+              )}
+
+              {/* Add to Cart button now handles the active method on click directly */}
               <div className={styles.sliderBtnWrapper}>
-                <button className={styles.sliderBtn}>
+                <button
+                  className={styles.sliderBtn}
+                  onClick={handleAddToCartClick}
+                  type="button"
+                >
                   {currentLocale === "es"
                     ? "agregar a su carrito"
                     : currentLocale === "fr"
@@ -158,6 +182,7 @@ const ProductHero = ({ slug }) => {
                       : "add to your cart"}
                 </button>
               </div>
+
               <div className={styles.saveBtnWrapper}>
                 <button
                   className={styles.saveBtn}
@@ -184,12 +209,11 @@ const ProductHero = ({ slug }) => {
                   </span>
                 </button>
               </div>
+
               <div>
                 {shopifyData?.categoryMetafields &&
                   (() => {
-                    // 1. Helper function to extract and join the labels from a specific metafield key
                     const getLabelsByKey = (keyName) => {
-                      // Fix: Added optional chaining to meta?.key to handle null entries safely
                       const metafield = shopifyData?.categoryMetafields?.find(
                         (meta) => meta?.key === keyName,
                       );
@@ -197,12 +221,9 @@ const ProductHero = ({ slug }) => {
 
                       return metafield.references.nodes
                         .map((node) => {
-                          // Safely look for the localized "label" or "name" field
                           const localizedLabel = node?.fields?.find(
                             (f) => f?.key === "label" || f?.key === "name",
                           )?.value;
-
-                          // Fall back to the node's handle if fields are missing
                           return localizedLabel || node?.handle;
                         })
                         .filter(Boolean)
@@ -215,7 +236,6 @@ const ProductHero = ({ slug }) => {
 
                     return (
                       <div className="mt-4 flex flex-col gap-5">
-                        {/* Suited to Section */}
                         {suitedTo && (
                           <div className="flex flex-col gap-1 border-bottom border-secondary-subtle pb-2 mb-3">
                             <p className={styles.categoryMetaTitle}>
@@ -231,7 +251,6 @@ const ProductHero = ({ slug }) => {
                           </div>
                         )}
 
-                        {/* Skin Feel Section */}
                         {skinFeel && (
                           <div className="flex flex-col gap-1 border-bottom border-secondary-subtle pb-2 mb-3">
                             <p className={styles.categoryMetaTitle}>
@@ -247,7 +266,6 @@ const ProductHero = ({ slug }) => {
                           </div>
                         )}
 
-                        {/* Key Ingredients Section */}
                         {keyIngredients && (
                           <div className="flex flex-col gap-1 border-bottom border-secondary-subtle pb-2 mb-3">
                             <p className={styles.categoryMetaTitle}>

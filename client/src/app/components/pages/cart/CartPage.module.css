@@ -1,3 +1,28 @@
 .container {
   padding: 100px 0;
 }
+
+.productTitle {
+  color: var(--foreground);
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.removeBtn {
+  background-color: transparent;
+  border: 0;
+  color: var(--linkText);
+  font-size: 12px;
+  font-weight: 400;
+  text-decoration: underline;
+}
+
+.quantitySelect {
+  border-radius: 0;
+}
+
+.checkoutButton {
+  background-color: var(--foreground);
+  color: var(--background);
+  border: 0;
+}
