@@ -17,34 +17,50 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(cartItems));
   }, [cartItems]);
 
-  const addToCart = (product, variantId) => {
-    setCartItems((prev) => {
-      const existingIndex = prev.findIndex(
-        (item) => item.variantId === variantId,
-      );
-      if (existingIndex > -1) {
-        const updated = [...prev];
-        updated[existingIndex].quantity += 1;
-        return updated;
+  const addToCart = (newItem) => {
+    setCartItems((prevItems) => {
+      // 1. Get a reliable ID from the incoming new item
+      const newItemId = newItem.id || newItem.variantId;
+
+      // 2. Check if this product style already exists in the current cart array
+      const existingItemIndex = prevItems.findIndex((item) => {
+        const currentItemId = item.id || item.variantId;
+        return currentItemId === newItemId;
+      });
+
+      if (existingItemIndex > -1) {
+        // 3. Item exists! Increment its quantity rather than replacing the item completely
+        const updatedItems = [...prevItems];
+        const existingItem = updatedItems[existingItemIndex];
+
+        updatedItems[existingItemIndex] = {
+          ...existingItem,
+          quantity: existingItem.quantity + (newItem.quantity || 1),
+        };
+        return updatedItems;
       }
-      return [...prev, { ...product, variantId, quantity: 1 }];
+
+      // 4. Fresh Item! Safe to append cleanly alongside previous elements in state array
+      return [...prevItems, { ...newItem, quantity: newItem.quantity || 1 }];
     });
   };
 
-  const updateQuantity = (variantId, quantity) => {
-    if (quantity <= 0) {
-      removeFromCart(variantId);
-      return;
-    }
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.variantId === variantId ? { ...item, quantity } : item,
+  const updateQuantity = (id, quantity) => {
+    setCartItems((prevItems) =>
+      prevItems.map((item) =>
+        // 💡 FIX: Safely evaluate both id or variantId styles against the target id
+        item.id === id || item.variantId === id
+          ? { ...item, quantity: Math.max(1, quantity) }
+          : item,
       ),
     );
   };
 
-  const removeFromCart = (variantId) => {
-    setCartItems((prev) => prev.filter((item) => item.variantId !== variantId));
+  const removeFromCart = (id) => {
+    setCartItems((prevItems) =>
+      // 💡 FIX: Safely filter checking both key variations
+      prevItems.filter((item) => item.id !== id && item.variantId !== id),
+    );
   };
 
   const clearCart = () => setCartItems([]);

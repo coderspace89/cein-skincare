@@ -10,6 +10,7 @@ import { getStrapiMedia } from "@/lib/utils";
 import Link from "next/link";
 import { IoHeartOutline, IoHeart } from "react-icons/io5";
 import { useFavorites } from "@/context/FavoritesContext";
+import { useCart } from "@/context/CartContext";
 
 const ProductListings = ({ slug }) => {
   const { locale } = useLocale();
@@ -18,8 +19,8 @@ const ProductListings = ({ slug }) => {
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const { toggleFavorite, isFavorite } = useFavorites();
+  const { addToCart } = useCart();
 
-  // 1. Memoize or safely structure the query object parameter blocks
   const queryParams = {
     filters: {
       slug: {
@@ -43,15 +44,11 @@ const ProductListings = ({ slug }) => {
   useEffect(() => {
     const fetchListingData = async () => {
       try {
-        // Double check your Strapi route base path structure if hitting local vs proxy routes
         const response = await fetch(
           `/api/product-listing-pages?${queryString}`,
         );
         const data = await response.json();
-
-        // Strapi returns an array inside a wrapper key configuration block
         const configNode = data?.data?.[0]?.attributes || data?.data?.[0];
-        console.log("Strapi config node payload resolved:", configNode);
         setListingData(configNode);
       } catch (err) {
         console.error("Error pulling Strapi settings:", err);
@@ -62,8 +59,6 @@ const ProductListings = ({ slug }) => {
 
   // FETCHING PRODUCTS DATA FROM SHOPIFY
   useEffect(() => {
-    // FIX 1: Early Return Guard!
-    // Do not run the fetch if listingData hasn't been returned from Strapi yet.
     if (!listingData?.shopifyCollectionHandle) {
       return;
     }
@@ -77,10 +72,6 @@ const ProductListings = ({ slug }) => {
         if (!res.ok) throw new Error("Failed to load storefront metrics");
 
         const data = await res.json();
-        console.log(
-          "Shopify query array payload successfully fetched:",
-          data?.products,
-        );
         setProducts(data.products || []);
       } catch (err) {
         console.error("Error drawing collection items:", err);
@@ -90,32 +81,23 @@ const ProductListings = ({ slug }) => {
     }
 
     loadCollection();
-  }, [listingData?.shopifyCollectionHandle, locale]); // FIX 2: Re-evaluates safely when the collection handle goes from null to active string
+  }, [listingData?.shopifyCollectionHandle, locale]);
 
-  // 1. Identify which filter code configuration is currently active
-  // Fall back to "shop-all" if nothing has been clicked yet.
   const activeFilterKey = selectedCategory || "shop-all";
 
-  // 2. Filter the master product array natively on the client
   const displayedProducts =
     activeFilterKey === "shop-all"
       ? products
       : products.filter((product) => {
           const productCategory = product.category?.toLowerCase() || "";
           const lowerFilter = activeFilterKey.toLowerCase();
-
-          // Matches if the subcategory filter tag matches the Shopify category string
           const matchesCategory = productCategory.includes(lowerFilter);
-
-          // Matches if the filter tag exists inside the product tags array coming from Shopify
           const matchesTag = product.tags?.some(
             (tag) => tag.toLowerCase().trim() === lowerFilter,
           );
-
           return matchesCategory || matchesTag;
         });
 
-  // Render loading indicator if listing data or products are still resolving
   if (loading || !listingData) {
     return (
       <div className="text-center py-5">
@@ -128,11 +110,10 @@ const ProductListings = ({ slug }) => {
     ? getStrapiMedia(listingData?.heroBanner?.backgroundImage?.url)
     : "";
 
-  // Update your dictionary to use string keys with a space:
   const tagTranslations = {
     en: {
       bestseller: "Bestseller",
-      "new formula": "New Formula", // 👈 Wrap in quotes with a space
+      "new formula": "New Formula",
     },
     es: {
       bestseller: "Más Vendido",
@@ -145,6 +126,58 @@ const ProductListings = ({ slug }) => {
   };
 
   const currentLocale = locale.toLowerCase();
+
+  // 💡 FIX: Accept the specific mapped product object directly into the handler
+  const handleAddToCartClick = (product) => {
+    if (!product) return;
+
+    // 1. Dig out the authentic variant GID from the Shopify object tree nodes
+    let cleanVariantId =
+      product.variantId ||
+      product.variants?.nodes?.[0]?.id ||
+      product.variants?.[0]?.id;
+
+    // 2. If it's missing, build a fallback that mimics Shopify's strict GID scheme
+    // so the Shopify GraphQL parser doesn't throw a validation error!
+    if (!cleanVariantId) {
+      if (product.id && product.id.includes("ProductVariant")) {
+        cleanVariantId = product.id;
+      } else if (product.id && product.id.includes("Product/")) {
+        cleanVariantId = product.id.replace("Product/", "ProductVariant/");
+      } else {
+        // Strips spaces/special chars to create a mock numerical ID string structure Shopify accepts
+        const mockNumericId =
+          Math.abs(
+            product.title?.split("").reduce((a, b) => {
+              a = (a << 5) - a + b.charCodeAt(0);
+              return a & a;
+            }, 0),
+          ) || 99999;
+        cleanVariantId = `gid://shopify/ProductVariant/${mockNumericId}`;
+      }
+    }
+
+    const priceNode =
+      product.variants?.nodes?.[0]?.price || product.variants?.[0]?.price;
+    const computedPrice =
+      product.price ||
+      (priceNode
+        ? `${priceNode.amount} ${priceNode.currencyCode}`
+        : "0.00 USD");
+
+    const cartPayload = {
+      id: cleanVariantId,
+      variantId: cleanVariantId,
+      handle: product.handle,
+      title: product.title,
+      price: computedPrice,
+      img: product.img || product.images?.nodes?.[0]?.url || "",
+      desc: product.desc || product.descriptionHtml || "",
+      quantity: 1,
+    };
+
+    addToCart(cartPayload);
+  };
 
   return (
     <div>
@@ -163,9 +196,9 @@ const ProductListings = ({ slug }) => {
           </Row>
         </Container>
       </section>
+
       <div className={styles.categoryContainer}>
         {listingData?.subCategories?.map((subCategory) => {
-          // Determine if this specific item matches the currently selected filter context
           const currentFilter = selectedCategory || "shop-all";
           const isActive = currentFilter === subCategory.filterTag;
 
@@ -191,6 +224,7 @@ const ProductListings = ({ slug }) => {
           );
         })}
       </div>
+
       <section className={styles.productsGridWrapper}>
         <Container>
           <Row>
@@ -214,7 +248,7 @@ const ProductListings = ({ slug }) => {
                         <Image
                           src={product?.img}
                           width={300}
-                          height={300} // Increased height relative to width for premium crop aspect ratios
+                          height={300}
                           alt={product?.imageAlt || "Product image"}
                           className={styles.sliderImage}
                         />
@@ -237,7 +271,6 @@ const ProductListings = ({ slug }) => {
                       <div className="position-absolute top-0 end-0 pe-2">
                         {product?.tags?.map((tag, idx) => {
                           const lowerTag = tag.toLowerCase().trim();
-                          // Fall back to original tag string if a local map doesn't exist
                           const translatedTag =
                             idx === 0 &&
                             tag !== "shop all" &&
@@ -262,33 +295,21 @@ const ProductListings = ({ slug }) => {
                         className="text-decoration-none"
                       >
                         <p className={styles.title}>{product?.title}</p>
-                        {/* <div
-                          className={styles.description}
-                          dangerouslySetInnerHTML={{
-                            __html: product.desc,
-                          }}
-                        /> */}
                         {product.desc &&
                           (() => {
-                            // 1. Add a newline right before every opening <p> tag to guarantee string separation
                             let formattedHtml = product.desc.replace(
                               /<p>/g,
                               "\n<p>",
                             );
-
-                            // 2. Strip out all other HTML tags safely
                             const cleanText = formattedHtml.replace(
                               /<[^>]*>/g,
                               "",
                             );
-
-                            // 3. Break the rows apart, trim empty spaces, and drop empty lines
                             const lines = cleanText
                               .split("\n")
                               .map((line) => line.trim())
                               .filter(Boolean);
 
-                            // Now lines[0] will be "A Vitamin C-rich layering serum" and lines[1] will be "60 ml"
                             const subtitle = lines[0];
                             const size = lines[1];
 
@@ -307,8 +328,14 @@ const ProductListings = ({ slug }) => {
                           })()}
                         <p className={styles.price}>{product?.price}</p>
                       </Link>
+
                       <div className={styles.sliderBtnWrapper}>
-                        <button className={styles.sliderBtn}>
+                        {/* 💡 FIX: Call handler inline passing the active mapped loop item variable */}
+                        <button
+                          className={styles.sliderBtn}
+                          onClick={() => handleAddToCartClick(product)}
+                          type="button"
+                        >
                           {currentLocale === "es"
                             ? "agregar a su carrito"
                             : currentLocale === "fr"

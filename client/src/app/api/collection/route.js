@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 const domain = process.env.SHOPIFY_STORE_DOMAIN;
 const storefrontAccessToken = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN;
 
-// Localized mapping configurations matching your target regional store setups
 const LOCALE_SETTINGS = {
   en: { language: "EN", country: "US" },
   es: { language: "ES", country: "ES" },
@@ -12,7 +11,7 @@ const LOCALE_SETTINGS = {
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
-  const handle = searchParams.get("handle"); // The master English collection handle (e.g., 'skin-care')
+  const handle = searchParams.get("handle");
   const clientLocale = searchParams.get("locale") || "en";
 
   if (!handle) {
@@ -25,7 +24,7 @@ export async function GET(request) {
   const activeSettings =
     LOCALE_SETTINGS[clientLocale.toLowerCase()] || LOCALE_SETTINGS.en;
 
-  // GraphQL query designed to pull items inside a specific target collection handle context
+  // 💡 FIX 1: Added "id" inside the variant node query block
   const collectionProductsQuery = `
     query getCollectionProducts($handle: String!, $language: LanguageCode!, $country: CountryCode!) 
     @inContext(language: $language, country: $country) {
@@ -43,6 +42,7 @@ export async function GET(request) {
             }
             variants(first: 1) {
               nodes {
+                id 
                 price {
                   amount
                   currencyCode
@@ -93,17 +93,18 @@ export async function GET(request) {
 
     const rawProducts = json?.data?.collection?.products?.nodes || [];
 
-    // Normalize and clean up variables for immediate frontend consumption
     const mappedProducts = rawProducts.map((item) => {
       const firstImage = item.images?.nodes?.[0]?.url || null;
       const firstVariant = item.variants?.nodes?.[0];
 
       return {
         id: item.id,
-        title: item.title, // Translated natively by Shopify
-        desc: item.descriptionHtml || "", // Translated natively by Shopify
-        category: item.productType || "Other", // Maps to the standard Shopify Category column
-        tags: item.tags || [], // Kept in English for clean filtering logic
+        // 💡 FIX 2: Explicitly append the unique variant ID to the response item
+        variantId: firstVariant?.id || null,
+        title: item.title,
+        desc: item.descriptionHtml || "",
+        category: item.productType || "Other",
+        tags: item.tags || [],
         price: firstVariant?.price
           ? new Intl.NumberFormat(clientLocale, {
               style: "currency",

@@ -47,7 +47,6 @@ const CartPage = () => {
         const response = await fetch(`/api/cart-page?${queryString}`);
         const payload = await response.json();
         const dataNode = payload?.data;
-        console.log(dataNode);
 
         if (dataNode) {
           setPageData(dataNode);
@@ -67,21 +66,13 @@ const CartPage = () => {
 
   // FETCH FRESH TRANSLATED PRODUCT DATA FROM SHOPIFY WHEN LOCALE CHANGES
   useEffect(() => {
-    console.log(
-      "1. UseEffect mounted. Cart items count:",
-      cartItems?.length,
-      "Locale:",
-      locale,
-    );
-
     const fetchLocalizedProductTitles = async () => {
       if (!cartItems || cartItems.length === 0) return;
 
-      // Map by variantId (or item.id) instead of handle
+      // Map by item.id or item.variantId cleanly
       const variantIds = cartItems
-        .map((item) => item.variantId || item.id)
+        .map((item) => item.id || item.variantId)
         .filter(Boolean);
-      console.log("3. Extracted Variant IDs:", variantIds);
 
       if (variantIds.length === 0) return;
 
@@ -96,11 +87,13 @@ const CartPage = () => {
 
         const translationMap = {};
         freshProducts.forEach((prod) => {
-          if (prod.variantId) {
-            translationMap[prod.variantId] = {
+          // Store lookups under both potential payload keys to ensure seamless fallback resolution
+          const lookupKey = prod.variantId || prod.id;
+          if (lookupKey) {
+            translationMap[lookupKey] = {
               title: prod.title,
               description: prod.description,
-              price: prod.price, // 💡 FIXED: Storing the fresh localized price from Shopify into state
+              price: prod.price,
               currency: prod.currency || "USD",
             };
           }
@@ -169,9 +162,10 @@ const CartPage = () => {
     );
   }
 
-  // Recalculate your cart subtotal using the live localized values
+  // Recalculate your cart subtotal using the live localized values with strict fallbacks
   const localizedSubTotal = cartItems.reduce((acc, item) => {
-    const localizedProduct = localizedTitles[item.variantId];
+    const itemKey = item.id || item.variantId;
+    const localizedProduct = localizedTitles[itemKey];
     const rawPriceString =
       localizedProduct?.price !== undefined
         ? String(localizedProduct.price)
@@ -181,9 +175,9 @@ const CartPage = () => {
     return acc + itemPriceNumeric * item.quantity;
   }, 0);
 
-  // Determine uniform currency target from active inventory array items
-  const activeCurrencyCode =
-    localizedTitles[cartItems[0]?.variantId]?.currency || "USD";
+  // Determine uniform currency target from active inventory array items safely
+  const firstItemKey = cartItems[0]?.id || cartItems[0]?.variantId;
+  const activeCurrencyCode = localizedTitles[firstItemKey]?.currency || "USD";
 
   return (
     <section className={styles.container}>
@@ -219,13 +213,13 @@ const CartPage = () => {
 
           {/* Item Rows */}
           {cartItems.map((item) => {
+            const itemKey = item.id || item.variantId;
+
             const itemPriceNumeric =
               parseFloat(item.price.replace(/[^0-9.]/g, "")) || 0;
-            const targetCurrency =
-              localizedTitles[item.variantId]?.currency || "USD";
+            const targetCurrency = localizedTitles[itemKey]?.currency || "USD";
 
-            const displayTitle =
-              localizedTitles[item.variantId]?.title || item.title;
+            const displayTitle = localizedTitles[itemKey]?.title || item.title;
 
             // Parse descriptions for size sub-labels securely
             let sizeLabel = "";
@@ -241,7 +235,7 @@ const CartPage = () => {
 
             return (
               <Row
-                key={item.variantId || `cart-item-${item.id}`}
+                key={itemKey}
                 className={`${styles.cartItemRow} align-items-center py-4 g-3 border-bottom border-light-subtle`}
               >
                 {/* Product Info Column */}
@@ -263,7 +257,7 @@ const CartPage = () => {
                       <p className={styles.productSize}>{sizeLabel}</p>
                     )}
                     <button
-                      onClick={() => removeFromCart(item.variantId)}
+                      onClick={() => removeFromCart(itemKey)}
                       className={styles.removeBtn}
                     >
                       <small
@@ -300,10 +294,7 @@ const CartPage = () => {
                     <Form.Select
                       value={item.quantity}
                       onChange={(e) =>
-                        updateQuantity(
-                          item.variantId,
-                          parseInt(e.target.value, 10),
-                        )
+                        updateQuantity(itemKey, parseInt(e.target.value, 10))
                       }
                       className={styles.quantitySelect}
                     >
