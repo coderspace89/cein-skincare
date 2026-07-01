@@ -33,7 +33,7 @@
 .navLinks {
   font-size: 14px;
   letter-spacing: 0.1em;
-  color: var(--foreground);
+  color: var(--foreground) !important;
   transition: color 0.2s ease;
   margin-right: clamp(10px, 3vw, 15px);
 }

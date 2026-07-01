@@ -20,6 +20,8 @@ import {
 import dynamic from "next/dynamic";
 import { useLocale } from "@/context/LocaleContext";
 import SearchOverlay from "@/app/components/layout/SearchOverlay";
+import { useCart } from "@/context/CartContext";
+import { useFavorites } from "@/context/FavoritesContext";
 
 const MapComponent = dynamic(() => import("./MapComponent"), {
   ssr: false,
@@ -43,6 +45,8 @@ const Header = () => {
 
   // search overlay state
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const { itemCount } = useCart();
+  const { favoritesCount } = useFavorites();
 
   const query = qs.stringify(
     {
@@ -477,7 +481,12 @@ const Header = () => {
               href="/favorites"
               className={`${headerStyles.navLinks}`}
             >
-              <CiHeart size={20} color="#333333" />
+              <span className="d-flex">
+                <CiHeart size={20} color="#333333" />
+                {favoritesCount > 0 && (
+                  <span className="ps-1">{favoritesCount}</span>
+                )}
+              </span>
             </Nav.Link>
             <Nav.Link
               as={Link}
@@ -487,7 +496,10 @@ const Header = () => {
               <CiUser size={20} color="#333333" />
             </Nav.Link>
             <Nav.Link as={Link} href="/cart" className={headerStyles.navLinks}>
-              <PiBagLight size={20} color="#333333" />
+              <span className="d-flex">
+                <PiBagLight size={20} color="#333333" />
+                {itemCount > 0 && <span className="ps-1">{itemCount}</span>}
+              </span>
             </Nav.Link>
           </Nav>
         </Container>

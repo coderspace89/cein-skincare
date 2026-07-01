@@ -15,12 +15,14 @@ import Col from "react-bootstrap/Col";
 import Image from "next/image";
 import Link from "next/link";
 import { useFavorites } from "@/context/FavoritesContext";
+import { useCart } from "@/context/CartContext";
 
 const SuggestedProducts = ({ slug }) => {
   const { locale } = useLocale();
   const [sliderData, setSliderData] = useState(null);
   const [shopifyProducts, setShopifyProducts] = useState([]);
   const { toggleFavorite, isFavorite } = useFavorites();
+  const { addToCart } = useCart();
 
   // Memoize query string so it doesn't calculate on random component re-renders
   const query = React.useMemo(() => {
@@ -161,6 +163,34 @@ const SuggestedProducts = ({ slug }) => {
     ],
   };
 
+  // add to cart function
+  const handleAddToCartClick = (e, product) => {
+    e.preventDefault();
+
+    // Target the Variant ID instead of the Product ID
+    const targetVariantId =
+      product?.variantId || product?.variants?.nodes?.[0]?.id;
+
+    if (!targetVariantId) {
+      console.error(
+        "No variant ID found for this product payload structure:",
+        product,
+      );
+      return;
+    }
+
+    const productPayload = {
+      id: product.id,
+      variantId: targetVariantId, // 👈 Explicitly maintain the variant reference string
+      title: product.title,
+      img: product.imageUrl,
+      price: `${product.price} ${product.currency || "USD"}`,
+      desc: product.description || "",
+    };
+
+    addToCart(productPayload, targetVariantId);
+  };
+
   return (
     <section className={styles.container}>
       <Container>
@@ -281,7 +311,10 @@ const SuggestedProducts = ({ slug }) => {
                           </p>
                         </Link>
                         <div className={styles.sliderBtnWrapper}>
-                          <button className={styles.sliderBtn}>
+                          <button
+                            className={styles.sliderBtn}
+                            onClick={(e) => handleAddToCartClick(e, product)}
+                          >
                             {currentLocale === "es"
                               ? "agregar a su carrito"
                               : currentLocale === "fr"

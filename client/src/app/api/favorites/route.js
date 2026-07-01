@@ -37,6 +37,7 @@ export async function POST(request) {
             }
             variants(first: 1) {
               nodes {
+                id
                 price {
                   amount
                   currencyCode
@@ -92,6 +93,8 @@ export async function POST(request) {
 
       return {
         id: item.id,
+        // 💡 FIX 2: Explicitly append the unique variant ID to the response item
+        variantId: firstVariant?.id || null,
         title: item.title,
         desc: item.descriptionHtml || "",
         category: item.productType || "Other",

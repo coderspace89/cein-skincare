@@ -28,9 +28,17 @@ export const FavoritesProvider = ({ children }) => {
 
   const isFavorite = (productId) => favoriteIds.includes(productId);
 
+  // 💡 COMPUTE COUNT: Derive the count directly from the array length
+  const favoritesCount = favoriteIds.length;
+
   return (
     <FavoritesContext.Provider
-      value={{ favoriteIds, toggleFavorite, isFavorite }}
+      value={{
+        favoriteIds,
+        toggleFavorite,
+        isFavorite,
+        favoritesCount, // 💡 EXPOSE COUNT: Add it here so it can be consumed anywhere
+      }}
     >
       {children}
     </FavoritesContext.Provider>

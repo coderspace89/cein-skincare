@@ -80,6 +80,7 @@ export const CartProvider = ({ children }) => {
         removeFromCart,
         clearCart,
         subTotal,
+        itemCount: cartItems.reduce((sum, i) => sum + i.quantity, 0),
       }}
     >
       {children}

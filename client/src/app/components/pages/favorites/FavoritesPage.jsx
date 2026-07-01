@@ -8,12 +8,14 @@ import Image from "next/image";
 import { Row, Col, Spinner, Container } from "react-bootstrap";
 import Link from "next/link";
 import { IoHeart, IoHeartOutline } from "react-icons/io5";
+import { useCart } from "@/context/CartContext";
 
 const FavoritesPage = () => {
   const { locale } = useLocale();
   const { favoriteIds, toggleFavorite, isFavorite } = useFavorites();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { addToCart } = useCart();
 
   const currentLocale = locale.toLowerCase();
 
@@ -72,6 +74,34 @@ const FavoritesPage = () => {
 
     loadFavorites();
   }, [favoriteIds, locale]);
+
+  // add to cart function
+  const handleAddToCartClick = (e, product) => {
+    e.preventDefault();
+
+    // Target the Variant ID instead of the Product ID
+    const targetVariantId =
+      product?.variantId || product?.variants?.nodes?.[0]?.id;
+
+    if (!targetVariantId) {
+      console.error(
+        "No variant ID found for this product payload structure:",
+        product,
+      );
+      return;
+    }
+
+    const productPayload = {
+      id: product.id,
+      variantId: targetVariantId, // 👈 Explicitly maintain the variant reference string
+      title: product.title,
+      img: product.img,
+      price: `${product.price} ${product.currency || "USD"}`,
+      desc: product.description || "",
+    };
+
+    addToCart(productPayload, targetVariantId);
+  };
 
   if (loading) {
     return (
@@ -197,7 +227,12 @@ const FavoritesPage = () => {
                     </Link>
 
                     <div className={styles.sliderBtnWrapper}>
-                      <button className={styles.sliderBtn}>{t.cartBtn}</button>
+                      <button
+                        className={styles.sliderBtn}
+                        onClick={(e) => handleAddToCartClick(e, product)}
+                      >
+                        {t.cartBtn}
+                      </button>
                     </div>
                   </div>
                 </Col>
