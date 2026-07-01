@@ -1,12 +1,14 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 const CartContext = createContext(null);
 const STORAGE_KEY = "cein_cart_items";
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -16,6 +18,33 @@ export const CartProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(cartItems));
   }, [cartItems]);
+
+  // 💡 BULLETPROOF RETURN CHECK:
+  useEffect(() => {
+    // 💡 FIX: Check if the parameter exists in the URL at all (even if it's empty)
+    const hasCartParam = searchParams.has("cart_id");
+
+    // Fallback double check: Did they just land from your myshopify domain?
+    const cameFromShopify =
+      typeof document !== "undefined" &&
+      document.referrer.includes("myshopify.com");
+
+    if (hasCartParam || cameFromShopify) {
+      console.log("Checkout landing detected. Clearing headless cart state.");
+
+      // 1. Clear state array instantly
+      setCartItems([]);
+
+      // 2. Clear local storage cache completely
+      localStorage.removeItem("cein_cart_items");
+
+      // 3. Clean up the URL parameters cleanly so the address bar looks pristine
+      if (typeof window !== "undefined") {
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, document.title, newUrl);
+      }
+    }
+  }, [searchParams]);
 
   const addToCart = (newItem) => {
     setCartItems((prevItems) => {
@@ -63,7 +92,9 @@ export const CartProvider = ({ children }) => {
     );
   };
 
-  const clearCart = () => setCartItems([]);
+  const clearCart = () => {
+    setCartItems([]);
+  };
 
   const subTotal = cartItems.reduce((acc, item) => {
     // Strips out symbols and commas to calculate sums accurately

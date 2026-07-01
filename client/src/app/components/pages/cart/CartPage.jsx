@@ -13,7 +13,7 @@ const CartPage = () => {
   const [pageData, setPageData] = useState(null);
   const [localizedTitles, setLocalizedTitles] = useState({}); // Localized products mapping state
 
-  const { cartItems, updateQuantity, subTotal, removeFromCart } = useCart();
+  const { cartItems, updateQuantity, clearCart, removeFromCart } = useCart();
   const { locale } = useLocale();
   const [redirecting, setRedirecting] = useState(false);
   const [loadingLabels, setLoadingLabels] = useState(true);
@@ -113,6 +113,7 @@ const CartPage = () => {
   }
 
   // checkout function
+  // Inside your CartPage.jsx handleCheckout function:
   const handleCheckout = async () => {
     if (cartItems.length === 0) return;
     setRedirecting(true);
@@ -124,10 +125,12 @@ const CartPage = () => {
       });
       const data = await response.json();
       if (data.checkoutUrl) {
+        // // 💡 CLEAR IMMEDIATELY: Wipe the cart right before they leave your site
+        // clearCart();
         window.location.href = data.checkoutUrl;
       }
     } catch (err) {
-      console.error("Checkout redirection structural breakdown:", err);
+      console.error("Checkout redirection breakdown:", err);
     } finally {
       setRedirecting(false);
     }
