@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactCompiler: true,
+  allowedDevOrigins: ["nuttiness-groggy-jubilance.ngrok-free.dev"],
   images: {
     remotePatterns: [
       // 1. Local Strapi Uploads
