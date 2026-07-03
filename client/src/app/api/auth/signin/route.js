@@ -26,11 +26,14 @@ export async function GET(request) {
   const codeChallenge = base64UrlEncode(sha256(Buffer.from(codeVerifier)));
 
   // 2. Format Shopify authorization url endpoints
-  const authUrl = new URL(`https://shopify.com/authentication/73517301829/oauth/authorize`);
+  const authUrl = new URL(
+    `https://shopify.com/authentication/73517301829/oauth/authorize`,
+  );
   authUrl.searchParams.append("client_id", clientId);
+  // 💡 CHANGE THIS LINE IN YOUR /api/auth/login/route.js:
   authUrl.searchParams.append(
     "scope",
-    "openid email https://api.customers.com/auth/customer.graphql",
+    "openid email customer-account-api:full",
   );
   authUrl.searchParams.append("redirect_uri", redirectUri);
   authUrl.searchParams.append("response_type", "code");

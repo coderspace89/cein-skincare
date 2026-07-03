@@ -12,7 +12,6 @@ import { getStrapiMedia } from "@/lib/utils";
 const SignIn = () => {
   const [pageLabels, setPageLabels] = useState(null);
   const { locale } = useLocale();
-  const currentLocale = locale.toLowerCase();
 
   const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState("");
@@ -48,7 +47,7 @@ const SignIn = () => {
 
     // Directly forward the user context to your login API route
     // This automatically routes them into the Shopify secure authentication loop
-    window.location.href = `/api/auth/login?email=${encodeURIComponent(email)}`;
+    window.location.href = `/api/auth/signin?email=${encodeURIComponent(email)}`;
   };
 
   if (loading) {

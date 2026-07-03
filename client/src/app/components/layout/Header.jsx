@@ -490,7 +490,7 @@ const Header = () => {
             </Nav.Link>
             <Nav.Link
               as={Link}
-              href="/signup"
+              href="/signin"
               className={`${headerStyles.navLinks} d-none d-lg-block`}
             >
               <CiUser size={20} color="#333333" />
@@ -587,7 +587,7 @@ const Header = () => {
 
               {/* Bottom Section Core Footer Context Details Inside Mobile Drawer */}
               <div className={headerStyles.mobileMenuFooterStrip}>
-                <Link href="/signup" onClick={() => setIsMobileMenuOpen(false)}>
+                <Link href="/signin" onClick={() => setIsMobileMenuOpen(false)}>
                   Log in
                 </Link>
                 <Link
