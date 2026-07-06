@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_blocks_full_width_images",
+  "info": {
+    "displayName": "Full Width Image"
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "altText": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_blocks_cards",
+  "info": {
+    "displayName": "Cards"
+  },
+  "options": {},
+  "attributes": {
+    "cardBlocks": {
+      "type": "component",
+      "component": "blocks.dual-card-grid",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

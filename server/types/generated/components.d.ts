@@ -13,6 +13,42 @@ export interface BlocksBenefitsSection extends Struct.ComponentSchema {
   };
 }
 
+export interface BlocksCards extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_cards';
+  info: {
+    displayName: 'Cards';
+  };
+  attributes: {
+    cardBlocks: Schema.Attribute.Component<'blocks.dual-card-grid', true>;
+  };
+}
+
+export interface BlocksDualCardGrid extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_dual_card_grids';
+  info: {
+    displayName: 'Dual Card Grid';
+  };
+  attributes: {
+    backgroundImage: Schema.Attribute.Media<'images'>;
+    ctaLink: Schema.Attribute.String;
+    ctaUrl: Schema.Attribute.String;
+    description: Schema.Attribute.Text;
+    subtitle: Schema.Attribute.String;
+    title: Schema.Attribute.String;
+  };
+}
+
+export interface BlocksFullWidthImage extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_full_width_images';
+  info: {
+    displayName: 'Full Width Image';
+  };
+  attributes: {
+    altText: Schema.Attribute.String;
+    image: Schema.Attribute.Media<'images'>;
+  };
+}
+
 export interface BlocksHeroSection extends Struct.ComponentSchema {
   collectionName: 'components_blocks_hero_sections';
   info: {
@@ -280,6 +316,9 @@ declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'blocks.benefits-section': BlocksBenefitsSection;
+      'blocks.cards': BlocksCards;
+      'blocks.dual-card-grid': BlocksDualCardGrid;
+      'blocks.full-width-image': BlocksFullWidthImage;
       'blocks.hero-section': BlocksHeroSection;
       'blocks.image-with-text': BlocksImageWithText;
       'blocks.journal-grid': BlocksJournalGrid;
