@@ -25,3 +25,9 @@
 .markdownContainer > p {
   color: var(--foreground);
 }
+
+@media (max-width: 600px) {
+  .container {
+    margin-bottom: 10px;
+  }
+}

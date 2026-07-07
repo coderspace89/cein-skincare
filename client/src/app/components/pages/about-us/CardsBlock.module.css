@@ -1,0 +1,16 @@
+.bgImage {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 100px 50px;
+}
+
+.ctaLink {
+  text-decoration: none;
+  border: 1px solid var(--background);
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 400;
+  text-transform: capitalize;
+  color: var(--background);
+}

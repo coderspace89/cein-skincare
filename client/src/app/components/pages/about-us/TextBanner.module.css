@@ -1,0 +1,19 @@
+.container {
+  padding: 100px;
+  background-color: var(--cartBtnBorder);
+}
+
+.title {
+  color: var(--foreground);
+}
+
+.subtitle {
+  text-transform: uppercase;
+  color: var(--foreground);
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 20px;
+  }
+}
