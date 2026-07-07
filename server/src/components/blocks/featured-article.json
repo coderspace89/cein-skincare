@@ -1,0 +1,32 @@
+{
+  "collectionName": "components_blocks_featured_articles",
+  "info": {
+    "displayName": "Featured Article"
+  },
+  "options": {},
+  "attributes": {
+    "categoryTag": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "richtext"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "ctaLink": {
+      "type": "string"
+    },
+    "ctaUrl": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

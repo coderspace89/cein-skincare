@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_blocks_articles",
+  "info": {
+    "displayName": "articles"
+  },
+  "options": {},
+  "attributes": {
+    "featured": {
+      "type": "component",
+      "component": "blocks.featured-article",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

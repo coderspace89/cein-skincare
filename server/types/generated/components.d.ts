@@ -1,5 +1,15 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface BlocksArticles extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_articles';
+  info: {
+    displayName: 'articles';
+  };
+  attributes: {
+    featured: Schema.Attribute.Component<'blocks.featured-article', true>;
+  };
+}
+
 export interface BlocksBenefitsSection extends Struct.ComponentSchema {
   collectionName: 'components_blocks_benefits_sections';
   info: {
@@ -34,6 +44,21 @@ export interface BlocksDualCardGrid extends Struct.ComponentSchema {
     ctaUrl: Schema.Attribute.String;
     description: Schema.Attribute.Text;
     subtitle: Schema.Attribute.String;
+    title: Schema.Attribute.String;
+  };
+}
+
+export interface BlocksFeaturedArticle extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_featured_articles';
+  info: {
+    displayName: 'Featured Article';
+  };
+  attributes: {
+    categoryTag: Schema.Attribute.String;
+    content: Schema.Attribute.RichText;
+    ctaLink: Schema.Attribute.String;
+    ctaUrl: Schema.Attribute.String;
+    image: Schema.Attribute.Media<'images'>;
     title: Schema.Attribute.String;
   };
 }
@@ -315,9 +340,11 @@ export interface MenuNavMegamenu extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
+      'blocks.articles': BlocksArticles;
       'blocks.benefits-section': BlocksBenefitsSection;
       'blocks.cards': BlocksCards;
       'blocks.dual-card-grid': BlocksDualCardGrid;
+      'blocks.featured-article': BlocksFeaturedArticle;
       'blocks.full-width-image': BlocksFullWidthImage;
       'blocks.hero-section': BlocksHeroSection;
       'blocks.image-with-text': BlocksImageWithText;

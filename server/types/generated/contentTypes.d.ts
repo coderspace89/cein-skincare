@@ -740,6 +740,61 @@ export interface ApiHomePageHomePage extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiJournalPageJournalPage extends Struct.SingleTypeSchema {
+  collectionName: 'journal_pages';
+  info: {
+    displayName: 'Journal Page';
+    pluralName: 'journal-pages';
+    singularName: 'journal-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    image: Schema.Attribute.Media<'images'> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::journal-page.journal-page'
+    >;
+    pageBlocks: Schema.Attribute.DynamicZone<['blocks.articles']> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiLoginPageLoginPage extends Struct.SingleTypeSchema {
   collectionName: 'login_pages';
   info: {
@@ -1573,6 +1628,7 @@ declare module '@strapi/strapi' {
       'api::cart-page.cart-page': ApiCartPageCartPage;
       'api::global.global': ApiGlobalGlobal;
       'api::home-page.home-page': ApiHomePageHomePage;
+      'api::journal-page.journal-page': ApiJournalPageJournalPage;
       'api::login-page.login-page': ApiLoginPageLoginPage;
       'api::product-details-page.product-details-page': ApiProductDetailsPageProductDetailsPage;
       'api::product-listing-page.product-listing-page': ApiProductListingPageProductListingPage;
