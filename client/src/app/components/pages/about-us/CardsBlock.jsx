@@ -7,7 +7,6 @@ import { useLocale } from "@/context/LocaleContext";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Image from "next/image";
 import { getStrapiMedia } from "@/lib/utils";
 import { LiaArrowRightSolid } from "react-icons/lia";
 import Link from "next/link";

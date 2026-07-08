@@ -14,12 +14,14 @@ import Col from "react-bootstrap/Col";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { usePathname } from "next/navigation";
 
 const BlogSlider = () => {
   const [blogData, setBlogData] = useState([]);
   const [blockData, setBlockData] = useState(null);
   const { locale } = useLocale();
   const currentLocale = locale.toLowerCase();
+  const pathname = usePathname();
 
   const query = qs.stringify(
     {
@@ -162,20 +164,22 @@ const BlogSlider = () => {
                 ))}
               </Slider>
             </div>
-            <div className={styles.allLinkWrapper}>
-              <Link href="/journal" className={styles.allLink}>
-                <span>
-                  {currentLocale === "es"
-                    ? "Todas las entradas del blog"
-                    : currentLocale === "fr"
-                      ? "tous les articles de blog"
-                      : "all blog posts"}
-                  <span className="ms-3">
-                    <LiaArrowRightSolid color="#333333" size={24} />
+            {pathname === "/" && (
+              <div className={styles.allLinkWrapper}>
+                <Link href="/journal" className={styles.allLink}>
+                  <span>
+                    {currentLocale === "es"
+                      ? "Todas las entradas del blog"
+                      : currentLocale === "fr"
+                        ? "tous les articles de blog"
+                        : "all blog posts"}
+                    <span className="ms-3">
+                      <LiaArrowRightSolid color="#333333" size={24} />
+                    </span>
                   </span>
-                </span>
-              </Link>
-            </div>
+                </Link>
+              </div>
+            )}
           </Col>
         </Row>
       </Container>

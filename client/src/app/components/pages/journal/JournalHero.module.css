@@ -1,0 +1,23 @@
+.container {
+  margin-top: 110px;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 400px;
+  padding: 100px 40px;
+}
+
+.mobileContainer {
+  margin-top: 110px;
+}
+
+.mobileImage {
+  width: 100%;
+  height: 100%;
+}
+
+.mobileTextContainer {
+  padding: 20px;
+  background-color: var(--cartBtnBorder);
+  color: var(--foreground);
+}

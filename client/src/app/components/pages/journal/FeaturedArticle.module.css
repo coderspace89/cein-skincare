@@ -1,0 +1,38 @@
+/* .container {
+  margin-bottom: 100px;
+} */
+
+.image {
+  width: 100%;
+  height: 100%;
+}
+
+.categoryText {
+  color: var(--cartBtnBorder);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  display: block;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.titleText {
+  color: var(--foreground);
+  font-weight: 700;
+  font-size: 16px;
+  text-transform: capitalize;
+}
+
+.linkText {
+  color: var(--foreground);
+  font-weight: 400;
+  font-size: 15px;
+  text-transform: capitalize;
+  text-decoration: none;
+}
+
+.markdownContainer > p {
+  color: var(--foreground);
+  font-size: 15px;
+  font-weight: 400;
+}
