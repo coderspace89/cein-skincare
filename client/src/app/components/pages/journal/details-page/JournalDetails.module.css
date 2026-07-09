@@ -1,0 +1,76 @@
+.container {
+  margin-top: 150px;
+  margin-bottom: 100px;
+}
+
+/* The main container acts as the master grid layout */
+.markdownContainer {
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* 2 parts left column, 1 part right column */
+  column-gap: 32px;
+  row-gap: 1.5rem;
+  width: 100%;
+  /* max-width: 900px; */
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Force standard text content paragraphs to span across both columns so they look centered */
+.proseParagraph {
+  grid-column: span 2;
+  font-family: var(--font-serif), serif;
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: #374151;
+  margin-bottom: 1rem;
+  width: 100%;
+  /* max-width: 680px;  */
+  justify-self: center;
+}
+
+/* Base style for regular full-width images inserted elsewhere */
+.markdownContainer :global(p) img {
+  grid-column: span 2;
+  width: 100%;
+  height: auto;
+  margin: 2rem 0;
+}
+
+/* --- ASYMMETRIC SIDE-BY-SIDE SIDEBAR IMAGES --- */
+
+/* Image 2 slides into column 1 (the 2fr wider slot) */
+.largeColumnImage {
+  grid-column: 1;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  margin-top: 2rem;
+}
+
+/* Image 3 slides into column 2 (the 1fr narrower slot) */
+.smallColumnImage {
+  grid-column: 2;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  /* Shifts the detail closeup down slightly to mirror the design mockup */
+  margin-top: 6rem;
+}
+
+/* Mobile responsive viewports */
+@media (max-width: 768px) {
+  .markdownContainer {
+    grid-template-columns: 1fr; /* Drop down to single stack on small viewports */
+    column-gap: 0;
+  }
+
+  .proseParagraph,
+  .largeColumnImage,
+  .smallColumnImage {
+    grid-column: span 1;
+  }
+
+  .smallColumnImage {
+    margin-top: 0;
+  }
+}
