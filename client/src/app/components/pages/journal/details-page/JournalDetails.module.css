@@ -1,76 +1,100 @@
 .container {
-  margin-top: 150px;
-  margin-bottom: 100px;
+  margin-top: 120px;
 }
 
-/* The main container acts as the master grid layout */
+/* Master block container flow */
 .markdownContainer {
-  display: grid;
-  grid-template-columns: 2fr 1fr; /* 2 parts left column, 1 part right column */
-  column-gap: 32px;
-  row-gap: 1.5rem;
+  display: block;
   width: 100%;
-  /* max-width: 900px; */
-  margin: 0 auto;
   text-align: center;
 }
 
-/* Force standard text content paragraphs to span across both columns so they look centered */
+/* Clear styling exclusively for text content nodes */
 .proseParagraph {
-  grid-column: span 2;
-  font-family: var(--font-serif), serif;
-  font-size: 0.9rem;
-  line-height: 1.75;
-  color: #374151;
+  font-size: 0.95rem;
+  line-height: 1.85;
+  color: var(--foreground);
+  font-weight: 300;
+
+  /* Restricts readable text container widths smoothly */
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 1rem;
-  width: 100%;
-  /* max-width: 680px;  */
-  justify-self: center;
 }
 
-/* Base style for regular full-width images inserted elsewhere */
-.markdownContainer :global(p) img {
-  grid-column: span 2;
-  width: 100%;
-  height: auto;
-  margin: 2rem 0;
+/* Headings share the exact same readable container width restrictions */
+.markdownContainer h1,
+.markdownContainer h2,
+.markdownContainer h3,
+.markdownContainer h4 {
+  max-width: 700px;
+  margin: 3.5rem auto 1.2rem auto;
+  color: var(--foreground);
 }
 
-/* --- ASYMMETRIC SIDE-BY-SIDE SIDEBAR IMAGES --- */
+/* --- FULL-WIDTH IMAGE ROW CONFIGURATION --- */
 
-/* Image 2 slides into column 1 (the 2fr wider slot) */
+/* This container breaks completely free from standard text limits, spanning 100% width */
+.fullWidthImageWrapper {
+  width: 100%;
+  max-width: 100%;
+  margin: 1rem 0;
+}
+
+.fullWidthImageWrapper img {
+  width: 100% !important;
+  height: auto !important;
+  display: block;
+  object-fit: cover;
+}
+
+/* --- ASYMMETRIC GRID ROW (Bottom Layout) --- */
+.asymmetricLayoutGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* 2 parts wide column, 1 part narrow column */
+  column-gap: 32px;
+  align-items: start;
+  width: 100%;
+  max-width: 100%;
+  margin: 1rem 0;
+}
+
 .largeColumnImage {
-  grid-column: 1;
-  width: 100%;
-  height: auto;
-  object-fit: cover;
-  margin-top: 2rem;
+  width: 100% !important;
+  height: auto !important;
+  margin: 0 !important;
 }
 
-/* Image 3 slides into column 2 (the 1fr narrower slot) */
 .smallColumnImage {
-  grid-column: 2;
-  width: 100%;
-  height: auto;
-  object-fit: cover;
-  /* Shifts the detail closeup down slightly to mirror the design mockup */
-  margin-top: 6rem;
+  width: 100% !important;
+  height: auto !important;
+  margin: 0 !important;
 }
 
-/* Mobile responsive viewports */
+/* --- THE FIRST STANDALONE IMAGE (Fills entire column space smoothly) --- */
+.fullWidthImageWrapper {
+  width: 100%;
+  max-width: 100%;
+  margin: 1rem 0;
+}
+
+.fullWidthImageWrapper img {
+  width: 100% !important;
+  height: auto !important;
+  display: block;
+  object-fit: cover;
+}
+
+/* Mobile viewport layout */
 @media (max-width: 768px) {
-  .markdownContainer {
-    grid-template-columns: 1fr; /* Drop down to single stack on small viewports */
-    column-gap: 0;
-  }
-
-  .proseParagraph,
-  .largeColumnImage,
-  .smallColumnImage {
-    grid-column: span 1;
+  .asymmetricLayoutGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin: 1rem 0;
   }
 
   .smallColumnImage {
-    margin-top: 0;
+    margin-top: 0 !important;
   }
 }

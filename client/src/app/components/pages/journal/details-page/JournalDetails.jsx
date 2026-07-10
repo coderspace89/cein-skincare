@@ -5,18 +5,15 @@ import styles from "./JournalDetails.module.css";
 import qs from "qs";
 import { useLocale } from "@/context/LocaleContext";
 import { usePathname } from "next/navigation";
-import { getStrapiMedia } from "@/lib/utils";
-import { LiaArrowRightSolid } from "react-icons/lia";
-import Image from "next/image";
-import Link from "next/link";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 
 const JournalDetails = ({ slug }) => {
   const [detailsContent, setDetailsContent] = useState(null);
-  const [recentPosts, setRecentPosts] = useState(null);
+  // const [recentPosts, setRecentPosts] = useState(null);
   const { locale } = useLocale();
   const currentSlug = usePathname();
 
@@ -64,30 +61,45 @@ const JournalDetails = ({ slug }) => {
 
   //   fetch recent posts
 
-  useEffect(() => {
-    const fetchRecentPosts = async () => {
-      try {
-        const response = await fetch(`/api/blog-posts?${getRecentPostsQuery}`);
-        const data = await response.json();
-        console.log(data?.data);
-        setRecentPosts(data?.data);
-      } catch (error) {
-        console.error("Error fetching blog data:", error);
-      }
-    };
-    fetchRecentPosts();
-  }, [getRecentPostsQuery]);
+  // useEffect(() => {
+  //   const fetchRecentPosts = async () => {
+  //     try {
+  //       const response = await fetch(`/api/blog-posts?${getRecentPostsQuery}`);
+  //       const data = await response.json();
+  //       console.log(data?.data);
+  //       setRecentPosts(data?.data);
+  //     } catch (error) {
+  //       console.error("Error fetching blog data:", error);
+  //     }
+  //   };
+  //   fetchRecentPosts();
+  // }, [getRecentPostsQuery]);
+
+  // Pre-process the content text string before passing it into the renderer
+  const prepareMarkdownContent = (contentString) => {
+    if (!contentString) return "";
+
+    // Look for your two adjacent markdown images at the bottom of the page
+    // and wrap them tightly inside a custom HTML marker block.
+    const regex =
+      /(!\[.*?img2.*?\]\(.*?\))\s*[\r\n]+\s*(!\[.*?img3.*?\]\(.*?\))/g;
+
+    return contentString.replace(
+      regex,
+      '<div class="asymmetric-layout-grid">\n\n$1\n\n$2\n</div>',
+    );
+  };
 
   return (
     <section className={styles.container}>
       <Container>
         <Row className="justify-content-center">
-          <Col>
+          <Col xs={12} lg={12} xl={11}>
             <div className={styles.markdownContainer}>
               <ReactMarkdown
+                rehypePlugins={[rehypeRaw]}
                 components={{
                   p: ({ node, children }) => {
-                    // Extract valid non-empty elements
                     const validChildren = React.Children.toArray(
                       children,
                     ).filter(
@@ -95,48 +107,58 @@ const JournalDetails = ({ slug }) => {
                         typeof child !== "string" || child.trim() !== "",
                     );
 
-                    // Check if this paragraph contains exactly one image element
+                    // Check if this paragraph contains only a standalone image element
                     if (
                       validChildren.length === 1 &&
                       React.isValidElement(validChildren[0]) &&
                       validChildren[0].type === "img"
                     ) {
                       const imgProps = validChildren[0].props;
-
-                      // Match the image names from your Strapi markdown editor content
-                      const isImg2 =
+                      const isImg2Or3 =
+                        imgProps.src?.includes("img2") ||
+                        imgProps.src?.includes("img3") ||
                         imgProps.alt?.includes("img2") ||
-                        imgProps.src?.includes("img2");
-                      const isImg3 =
-                        imgProps.alt?.includes("img3") ||
-                        imgProps.src?.includes("img3");
+                        imgProps.alt?.includes("img3");
 
-                      if (isImg2) {
+                      // Separate your standard standalone images from your bottom grid images
+                      if (!isImg2Or3) {
                         return (
-                          <img
-                            src={imgProps.src}
-                            alt={imgProps.alt}
-                            className={styles.largeColumnImage}
-                          />
-                        );
-                      }
-                      if (isImg3) {
-                        return (
-                          <img
-                            src={imgProps.src}
-                            alt={imgProps.alt}
-                            className={styles.smallColumnImage}
-                          />
+                          <div className={styles.fullWidthImageWrapper}>
+                            {validChildren[0]}
+                          </div>
                         );
                       }
                     }
-
-                    // Standard text paragraph
-                    return <p className={styles.proseParagraph}>{children}</p>;
+                    return <p>{children}</p>;
+                  },
+                  div: ({ node, className, children }) => {
+                    if (className === "asymmetric-layout-grid") {
+                      return (
+                        <div className={styles.asymmetricLayoutGrid}>
+                          {children}
+                        </div>
+                      );
+                    }
+                    return <div>{children}</div>;
+                  },
+                  img: ({ node, src, alt }) => {
+                    const isImg3 =
+                      src?.includes("img3") || alt?.includes("img3");
+                    return (
+                      <img
+                        src={src}
+                        alt={alt}
+                        className={
+                          isImg3
+                            ? styles.smallColumnImage
+                            : styles.largeColumnImage
+                        }
+                      />
+                    );
                   },
                 }}
               >
-                {detailsContent?.content}
+                {prepareMarkdownContent(detailsContent?.content)}
               </ReactMarkdown>
             </div>
           </Col>
