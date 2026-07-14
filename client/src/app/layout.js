@@ -9,6 +9,7 @@ import GlobalLoader from "@/app/components/common/GlobalLoader";
 import PromoModal from "@/app/components/common/PromoModal";
 import { FavoritesProvider } from "@/context/FavoritesContext";
 import { CartProvider } from "@/context/CartContext";
+import { Suspense } from "react";
 
 const arimo = Arimo({
   variable: "--font-arimo",
@@ -35,17 +36,19 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${arimo.variable} ${myFont.variable}`}>
       <body>
-        <LocaleProvider>
-          <FavoritesProvider>
-            <CartProvider>
-              <GlobalLoader />
-              <Header />
-              <PromoModal />
-              {children}
-              <Footer />
-            </CartProvider>
-          </FavoritesProvider>
-        </LocaleProvider>
+        <Suspense fallback={null}>
+          <LocaleProvider>
+            <FavoritesProvider>
+              <CartProvider>
+                <GlobalLoader />
+                <Header />
+                <PromoModal />
+                {children}
+                <Footer />
+              </CartProvider>
+            </FavoritesProvider>
+          </LocaleProvider>
+        </Suspense>
       </body>
     </html>
   );
