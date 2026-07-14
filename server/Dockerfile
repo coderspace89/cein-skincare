@@ -7,7 +7,7 @@ RUN npm install
 
 WORKDIR /opt/app
 COPY . .
-RUN npm run build
+RUN NODE_OPTIONS="--max-old-space-size=2048" npm run build
 EXPOSE 1337
 
 CMD ["npm", "run", "start"]
