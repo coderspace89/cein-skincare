@@ -46,7 +46,7 @@ The system is constructed with a modern, modular headless stack:
 
 ### 1. Frontend (`/`)
 *   **Framework**: Next.js 14+ (App Router)
-*   **Styling**: Tailwind CSS
+*   **Styling**: Bootstrap CSS
 *   **Cart Context**: React Context tracking client-side state, syncing with localStorage, and initiating checkout mutation requests on Shopify.
 
 ### 2. Backend (`/backend`)
